@@ -1,53 +1,86 @@
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const sliderTrack = document.querySelector('.slider-track');
+const totalSlides = slides.length;
 
-// Simple cart functionality
-let cart = [];
-
-function addToCart(productName, price) {
-    cart.push({ name: productName, price: price });
-    alert(`${productName} added to cart! Cart now has ${cart.length} items.`);
-    console.log('Current cart:', cart);
+function showSlide(index) {
+  slides.forEach(slide => slide.classList.remove('active'));
+  dots.forEach(dot => dot.classList.remove('active'));
+  slides[index].classList.add('active');
+  dots[index].classList.add('active');
+  sliderTrack.style.transform = `translateX(-${index * 25}%)`;
 }
 
-function scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        element.scrollIntoView({ 
-            behavior: 'smooth' 
-        });
-    }
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  showSlide(currentSlide);
 }
 
-// Mobile menu toggle (basic implementation)
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', function() {
-            alert('Mobile menu functionality would be implemented here');
-        });
+function previousSlide() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  showSlide(currentSlide);
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  showSlide(currentSlide);
+}
+
+setInterval(nextSlide, 4000);
+
+function toggleMenu() {
+  const menu = document.querySelector('.menu');
+  const toggle = document.querySelector('.menu-toggle');
+  menu.classList.toggle('active');
+  toggle.classList.toggle('active');
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    const menu = document.querySelector('.menu');
+    const toggle = document.querySelector('.menu-toggle');
+    if (menu.classList.contains('active')) {
+      menu.classList.remove('active');
+      toggle.classList.remove('active');
+    }
+  });
+});
 
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+function fadeInElements() {
+  const elements = document.querySelectorAll('.service, .project');
+  elements.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if (top < window.innerHeight - 150) {
+      el.classList.add('animate-fade-in');
+    }
+  });
+}
 
-    // Add some interactivity on scroll
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('.header');
-        if (header) {
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-            }
-        }
+window.addEventListener('scroll', fadeInElements);
+
+document.addEventListener('DOMContentLoaded', () => {
+  showSlide(0);
+  fadeInElements();
+
+  document.querySelectorAll('.quote-btn, .primary-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      alert('Contact us at contact@todocompany.com or call +1 (555) 123-4567.');
     });
+  });
+
+  const viewPortfolio = document.querySelector('.secondary-btn');
+  if (viewPortfolio) {
+    viewPortfolio.addEventListener('click', () => {
+      document.getElementById('projects').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }
 });
