@@ -564,27 +564,207 @@
             right: 20px;
         }
 
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: 2px solid #333;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: all 0.3s;
+        }
+
+        /* Dark Theme Colors */
+        body.dark-theme {
+            background-color: #1A1A1A;
+            color: #fff;
+        }
+
+        .dark-theme header {
+            background: #1A1A1A;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+        }
+
+        .dark-theme .dropdown-content {
+            background: #333;
+        }
+
+        .dark-theme .dropdown-content a {
+            color: #fff;
+        }
+
+        .dark-theme .product-card {
+            background: #333;
+        }
+
+        .dark-theme .product-name,
+        .dark-theme .product-price {
+            color: #fff;
+        }
+
+        .dark-theme .product-description {
+            color: #ccc;
+        }
+
+        .dark-theme .theme-toggle {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        /* Dark Theme Additional Styles */
+        .dark-theme .hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
+        }
+
+        .dark-theme .hero h1,
+        .dark-theme .section-title,
+        .dark-theme h3 {
+            color: #fff;
+        }
+
+        .dark-theme .dropdown > a, 
+        .dark-theme .dropdown > button {
+            color: #fff;
+        }
+
+        .dark-theme .slide {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
+        }
+
+        .dark-theme .slide-button {
+            background: #FFD700;
+            color: #1a1a1a;
+        }
+
+        .dark-theme .slide-button:hover {
+            background: #FFC107;
+        }
+
+        .dark-theme .product-image {
+            background: linear-gradient(45deg, #2c3e50, #1a1a1a);
+        }
+
+        .dark-theme .news-slider {
+            background: #2c3e50;
+        }
+
+        /* Product Detail Styles */
+        .product-showcase {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .product-hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-hero-info {
+            padding: 1rem;
+        }
+
+        .product-hero-info h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 1rem;
+        }
+
+        .buy-button {
+            background: #FFD700;
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-right: 1.3em;
+        }
+
+        /* Blog Styles */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .blog-image {
+            height: 200px;
+            background: #f0f2f5;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .read-more {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Information Styles */
+        .info-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .info-text h3 {
+            margin: 1.5rem 0 1rem;
+        }
+
+        .info-text p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* Dark Theme Support */
+        .dark-theme .product-showcase,
+        .dark-theme .blog-card,
+        .dark-theme .info-content {
+            background: #333;
+            color: #fff;
+        }
+
+        .dark-theme .blog-image {
+            background: #1A1A1A;
+        }
+
         @media (max-width: 768px) {
-            .news-slide {
-                padding: 0 40px;
-            }
-            
-            .news-slide-content {
-                font-size: 0.9rem;
-            }
-            
-            .news-slider-nav {
-                width: 25px;
-                height: 25px;
-                font-size: 1rem;
-            }
-            
-            .news-slider-nav.prev {
-                left: 10px;
-            }
-            
-            .news-slider-nav.next {
-                right: 10px;
+            .product-hero {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -632,7 +812,8 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">🏭 TO DO company</div>
+                <div class="logo">🖨️ TO DO company</div>
+                <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
                 <nav>
                     <ul>
                         <li class="dropdown">
@@ -809,6 +990,80 @@
                         <div class="product-price">$1,369.00 USD</div>
                     <button class="product-button click-effect">View product</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section product-detail" id="product-detail">
+        <div class="container">
+            <h2 class="section-title">Product Details</h2>
+            <div class="product-showcase">
+                <div class="product-hero">
+                    <div class="product-hero-image">
+                        <img src="https://cdn.prusa3d.com/content/images/product/default/3856.jpg" alt="3D Printer">
+                    </div>
+                    <div class="product-hero-info">
+                        <h1>Bambu Lab X1C Carbon</h1>
+                        <p class="price">$999.00 USD</p>
+                        <div class="description">
+                            <p>The X1C Carbon is our flagship model featuring:</p>
+                            <ul>
+                                <li>Core XY architecture</li>
+                                <li>Built-in camera for remote monitoring</li>
+                                <li>AI-powered failure detection</li>
+                                <li>Multi-material printing capability</li>
+                            </ul>
+                        </div>
+                        <aside>
+                            <button class="buy-button click-effect">Add to Cart</button>
+                            <button class="buy-button click-effect">View product</button>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section blog" id="blog">
+        <div class="container">
+            <h2 class="section-title">Latest News</h2>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <h3>Getting Started with 3D Printing</h3>
+                        <p class="date">January 15, 2024</p>
+                        <p class="excerpt">Learn the basics of 3D printing and how to choose your first printer...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <h3>Advanced Filament Guide</h3>
+                        <p class="date">January 10, 2024</p>
+                        <p class="excerpt">Everything you need to know about different filament types...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section info" id="info">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="info-content">
+                <div class="info-text">
+                    <h3>Our Mission</h3>
+                    <p>TO DO company is dedicated to bringing professional-grade 3D printing technology to everyone. We believe in democratizing manufacturing and enabling creators worldwide.</p>
+                    
+                    <h3>Quality Commitment</h3>
+                    <p>Every printer we sell undergoes rigorous testing and quality control. We stand behind our products with industry-leading warranty and support.</p>
+                    
+                    <h3>Customer Support</h3>
+                    <p>Our team of experts is available 24/7 to help you with any questions or concerns. We provide comprehensive documentation, video tutorials, and direct support.</p>
                 </div>
             </div>
         </div>
@@ -1010,6 +1265,18 @@
                 });
             }
         });
+
+        // Theme Toggle Functionality
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isNight = document.body.classList.contains('dark-theme');
+            localStorage.setItem('darkTheme', isNight);
+        }
+
+        // Check for saved theme preference
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.body.classList.add('dark-theme');
+        }
     </script>
 </body>
 </html>
