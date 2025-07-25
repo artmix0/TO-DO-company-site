@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TO DO company - Your one-stop solution for task management and productivity.">
+    <link rel="icon" href="../static/images/Light.png" type="image/png" id="favicon">
+    <link rel="stylesheet" href="../static/css/index.css">
+    <title>TO DO company</title>
+</head>
+<body>
+    <div class="news-slider">
+        <div class="news-slider-container">
+            <div class="news-slide active">
+                <div class="news-slide-content">
+                    📢 New X1C firmware update available now!
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    🎉 Save 15% on all filaments this week
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    🚀 A1 mini wins "Best Entry-Level 3D Printer 2024" award
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    🔥 Limited time: Free shipping on orders over $200
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    💡 New PLA+ formula now available in 20 colors
+                </div>
+            </div>
+        </div>
+        <button class="news-slider-nav prev" onclick="changeNewsSlide(-1)">‹</button>
+        <button class="news-slider-nav next" onclick="changeNewsSlide(1)">›</button>
+        <div class="news-slider-dots">
+            <span class="news-dot active" onclick="currentNewsSlide(1)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(2)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(3)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(4)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(5)"></span>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🖨️ TO DO company</div>
+                <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+                <nav>
+                    <ul>
+                        <li class="dropdown">
+                            <a href="">Products</a>
+                            <div class="dropdown-content">
+                                <a href="#printers">All Printers</a>
+                                <a href="#">X1 Series</a>
+                                <a href="#">P1 Series</a>
+                                <a href="#">A1 Series</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#filaments"></a>
+                            <div class="dropdown-content">
+                                <a href="#filaments">All Filaments</a>
+                                <a href="#">PLA</a>
+                                <a href="#">ABS</a>
+                                <a href="#">PETG</a>
+                                <a href="#">Specialty</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#materials">Materials</a>
+                            <div class="dropdown-content">
+                                <a href="#materials">All Materials</a>
+                                <a href="#">Engineering</a>
+                                <a href="#">Flexible</a>
+                                <a href="#">Composite</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#accessories">Accessories</a>
+                            <div class="dropdown-content">
+                                <a href="#accessories">All Accessories</a>
+                                <a href="#">AMS</a>
+                                <a href="#">Nozzles</a>
+                                <a href="#">Build Plates</a>
+                                <a href="#">Maintenance</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#support">Support</a>
+                            <div class="dropdown-content">
+                                <a href="#support">Help Center</a>
+                                <a href="#">Downloads</a>
+                                <a href="#">Warranty</a>
+                                <a href="#">Contact Us</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="announcement-slider">
+                <div class="slider-container">
+                    <div class="slide active">
+                        <div class="slide-content">
+                            <h1 class="slide-title">Rethink Personal Manufacturing</h1>
+                            <p class="slide-description">State-of-the-art desktop 3D printers that break the barriers between digital and physical worlds</p>
+                            <button class="slide-button click-effect">Explore Products</button>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-content">
+                            <h1 class="slide-title">X1C: The Ultimate 3D Printer</h1>
+                            <p class="slide-description">Multi-color, multi-material printing with AI-powered automation. Experience the future of desktop manufacturing.</p>
+                            <button class="slide-button click-effect">Shop X1C</button>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-content">
+                            <h1 class="slide-title">A1 Series: Perfect for Beginners</h1>
+                            <p class="slide-description">Easy-to-use, reliable, and affordable. Start your 3D printing journey with the award-winning A1 series.</p>
+                            <button class="slide-button click-effect">Shop A1 Series</button>
+                        </div>
+                    </div>
+                    <div class="slide">
+                        <div class="slide-content">
+                            <h1 class="slide-title">Premium Materials & Filaments</h1>
+                            <p class="slide-description">High-quality filaments and materials for every project. From PLA to advanced engineering plastics.</p>
+                            <button class="slide-button click-effect">Browse Materials</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="slider-nav prev" onclick="changeSlide(-1)">‹</button>
+                <button class="slider-nav next" onclick="changeSlide(1)">›</button>
+                <div class="slider-dots">
+                    <span class="dot active" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="printers">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: #666;">3D Printer</h3>
+            
+            <div class="product-grid">
+                <div class="product-card fade-in">
+                    <div class="sale-badge">15% OFF</div>
+                    <div class="product-image">🖨️</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bambu Lab X1C</h3>
+                        <p class="product-description">Best Deal for The Flagship</p>
+                        <p class="product-features">Multi Color & Multi Material Capability</p>
+                        <div class="product-price">From $999.00 USD</div>
+                        <button class="product-button click-effect">View product</button>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in">
+                    <div class="sale-badge">10% OFF</div>
+                    <div class="product-image">🔧</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bambu Lab P1S</h3>
+                        <p class="product-description">Best Value Choice for A Reliable Workhorse</p>
+                        <p class="product-features">Well-polished Hardware and Software</p>
+                        <div class="product-price">From $549.00 USD</div>
+                        <button class="product-button click-effect">View product</button>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in">
+                    <div class="sale-badge">5% OFF</div>
+                    <div class="product-image">⚙️</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bambu Lab P1P</h3>
+                        <p class="product-description">Essential Core-XY Workhorse</p>
+                        <p class="product-features">Upgradeable and Customizable Flexibility</p>
+                        <div class="product-price">$399.00 USD</div>
+                        <button class="product-button click-effect">View product</button>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in">
+                    <div class="sale-badge">8% OFF</div>
+                    <div class="product-image">🎯</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bambu Lab A1</h3>
+                        <p class="product-description">Full-size Gateway 3D Printer</p>
+                        <p class="product-features">The Best Choice For Beginner</p>
+                        <div class="product-price">From $349.00 USD</div>
+                        <button class="product-button click-effect">View product</button>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in">
+                    <div class="sale-badge">12% OFF</div>
+                    <div class="product-image">🏆</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bambu Lab A1 mini</h3>
+                        <p class="product-description">The G.O.A.T of Entry-Level 3D Printers</p>
+                        <p class="product-features">You Can't Beat The Price</p>
+                        <div class="product-price">From $249.00 USD</div>
+                        <button class="product-button click-effect">View product</button>
+                    </div>
+                </div>
+
+                <div class="product-card fade-in">
+                    <div class="sale-badge">20% OFF</div>
+                    <div class="product-image">⭐</div>
+                    <div class="product-info">
+                        <h3 class="product-name">X1C AMS 2 Pro Combo</h3>
+                        <p class="product-description">Enhancing Classic Flagship Performance</p>
+                        <p class="product-features">with Active Filament Drying</p>
+                        <div class="product-price">$1,369.00 USD</div>
+                    <button class="product-button click-effect">View product</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section product-detail" id="product-detail">
+        <div class="container">
+            <h2 class="section-title">Product Details</h2>
+            <div class="product-showcase">
+                <div class="product-hero">
+                    <div class="product-hero-image">
+                        <img src="https://cdn.prusa3d.com/content/images/product/default/3856.jpg" alt="3D Printer">
+                    </div>
+                    <div class="product-hero-info">
+                        <h1>Bambu Lab X1C Carbon</h1>
+                        <p class="price">$999.00 USD</p>
+                        <div class="description">
+                            <p>The X1C Carbon is our flagship model featuring:</p>
+                            <ul>
+                                <li>Core XY architecture</li>
+                                <li>Built-in camera for remote monitoring</li>
+                                <li>AI-powered failure detection</li>
+                                <li>Multi-material printing capability</li>
+                            </ul>
+                        </div>
+                        <aside>
+                            <button class="buy-button click-effect">Add to Cart</button>
+                            <button class="buy-button click-effect">View product</button>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section blog" id="blog">
+        <div class="container">
+            <h2 class="section-title">Latest News</h2>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <h3>Getting Started with 3D Printing</h3>
+                        <p class="date">January 15, 2024</p>
+                        <p class="excerpt">Learn the basics of 3D printing and how to choose your first printer...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-image"></div>
+                    <div class="blog-content">
+                        <h3>Advanced Filament Guide</h3>
+                        <p class="date">January 10, 2024</p>
+                        <p class="excerpt">Everything you need to know about different filament types...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section info" id="info">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="info-content">
+                <div class="info-text">
+                    <h3>Our Mission</h3>
+                    <p>TO DO company is dedicated to bringing professional-grade 3D printing technology to everyone. We believe in democratizing manufacturing and enabling creators worldwide.</p>
+                    
+                    <h3>Quality Commitment</h3>
+                    <p>Every printer we sell undergoes rigorous testing and quality control. We stand behind our products with industry-leading warranty and support.</p>
+                    
+                    <h3>Customer Support</h3>
+                    <p>Our team of experts is available 24/7 to help you with any questions or concerns. We provide comprehensive documentation, video tutorials, and direct support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="../static/scripts/index.js"></script>
+</body>
+</html>
