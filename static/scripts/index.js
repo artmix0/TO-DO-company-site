@@ -1,15 +1,270 @@
-// Smooth scrolling for navigation links
-document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+async function loadTopAnnouncements() {
+    try {
+        const response = await fetch('http://localhost:5000/api/announcements', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const newsSliderContainer = document.querySelector('.news-slider-container');
+
+        // Clear existing announcements
+        newsSliderContainer.innerHTML = '';
+
+        data.announcements.forEach((announcement, index) => {
+            const newSlide = document.createElement('div');
+            newSlide.className = `news-slide ${index === 0 ? 'active' : ''}`;
+            newSlide.innerHTML = `
+                <div class="news-slide-content">
+                    ${announcement.text}
+                </div>
+            `;
+            newsSliderContainer.appendChild(newSlide);
+        });
+
+        // Update dots for news slider
+        const dotsContainer = document.querySelector('.news-slider-dots');
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < data.announcements.length; i++) {
+            const dot = document.createElement('span');
+            dot.className = `news-dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => currentNewsSlide(i + 1);
+            dotsContainer.appendChild(dot);
+        }
+    } catch (error) {
+        console.error('Error loading top announcements:', error);
+    }
+}
+
+// Load hero slides from JSON
+async function loadHeroSlides() {
+    try {
+        const response = await fetch('http://localhost:5000/api/hero-slides', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const sliderContainer = document.querySelector('.announcement-slider-container');
+
+        // Clear existing slides
+        sliderContainer.innerHTML = '';
+
+        data.heroSlides.forEach((slide, index) => {
+            const newSlide = document.createElement('div');
+            newSlide.className = `slide ${index === 0 ? 'active' : ''}`;
+            newSlide.innerHTML = `
+                <div class="slide-content">
+                    <h1 class="slide-title">${slide.title}</h1>
+                    <p class="slide-description">${slide.description}</p>
+                    <button class="slide-button click-effect" onclick="location.href='${slide.buttonLink}'">${slide.buttonText}</button>
+                </div>
+            `;
+            sliderContainer.appendChild(newSlide);
+        });
+
+        // Update dots for hero slider
+        const dotsContainer = document.querySelector('.slider-dots');
+
+
+        dotsContainer.innerHTML = '';
+
+        for (let i = 0; i < data.heroSlides.length; i++) {
+            const dot = document.createElement('span');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => currentSlide(i + 1);
+            dotsContainer.appendChild(dot);
+        }
+    } catch (error) {
+        console.error('Error loading hero slides:', error);
+    }
+}
+
+// Load products from JSON
+async function loadProducts() {
+    try {
+        const response = await fetch('http://localhost:5000/api/products', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const productGrid = document.querySelector('.product-grid');
+
+        // Clear existing products
+        productGrid.innerHTML = '';
+
+        data.products.forEach(product => {
+            const newProduct = document.createElement('div');
+            newProduct.className = 'product-card fade-in';
+            newProduct.innerHTML = `
+                <div class="sale-badge">${product.sale}</div>
+                <div class="product-image">${product.image}</div>
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <p class="product-features">${product.features}</p>
+                    <div class="product-price">${product.price}</div>
+                    <button class="product-button click-effect">View product</button>
+                </div>
+            `;
+            productGrid.appendChild(newProduct);
+        });
+    } catch (error) {
+        console.error('Error loading products:', error);
+    }
+}
+
+// Load announcements from JSON
+async function loadAnnouncements() {
+    try {
+        const response = await fetch('http://localhost:5000/api/announcements', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        const newsSliderContainer = document.querySelector('.news-slider-container');
+
+        // Clear existing announcements
+        newsSliderContainer.innerHTML = '';
+
+        data.announcements.forEach((announcement, index) => {
+            const newSlide = document.createElement('div');
+            newSlide.className = `news-slide ${index === 0 ? 'active' : ''}`;
+            newSlide.innerHTML = `
+                <div class="news-slide-content">
+                    ${announcement.text}
+                </div>
+            `;
+            newsSliderContainer.appendChild(newSlide);
+        });
+
+        // Update dots
+        const dotsContainer = document.querySelector('.news-slider-dots');
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < data.announcements.length; i++) {
+            const dot = document.createElement('span');
+            dot.className = `news-dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => currentNewsSlide(i + 1);
+            dotsContainer.appendChild(dot);
+        }
+    } catch (error) {
+        console.error('Error loading announcements:', error);
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load data
+    await loadTopAnnouncements();
+    await loadHeroSlides();
+    await loadProducts();
+
+    // Smooth scrolling
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Product card hover effects
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('.product-card')) {
+            const card = e.target.closest('.product-card');
+            card.style.transform = 'translateY(-8px) scale(1.02)';
         }
     });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('.product-card')) {
+            const card = e.target.closest('.product-card');
+            card.style.transform = '';
+        }
+    });
+
+    // News Slider functionality
+    let currentNewsSlideIndex = 0;
+    const newsSlides = document.querySelectorAll('.news-slide');
+    const newsDots = document.querySelectorAll('.news-dot');
+    const totalNewsSlides = newsSlides.length;
+
+    function showNewsSlide(index) {
+        newsSlides.forEach(slide => slide.classList.remove('active'));
+        newsDots.forEach(dot => dot.classList.remove('active'));
+
+        newsSlides[index].classList.add('active');
+        newsDots[index].classList.add('active');
+    }
+
+    function changeNewsSlide(direction) {
+        currentNewsSlideIndex += direction;
+        if (currentNewsSlideIndex >= totalNewsSlides) currentNewsSlideIndex = 0;
+        if (currentNewsSlideIndex < 0) currentNewsSlideIndex = totalNewsSlides - 1;
+        showNewsSlide(currentNewsSlideIndex);
+    }
+
+    function currentNewsSlide(index) {
+        currentNewsSlideIndex = index - 1;
+        showNewsSlide(currentNewsSlideIndex);
+    }
+
+    // Auto-advance news slides
+    setInterval(() => {
+        changeNewsSlide(1);
+    }, 4000);
+
+    // Hero Slider functionality
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+    function changeSlide(direction) {
+        currentSlideIndex += direction;
+        if (currentSlideIndex >= totalSlides) currentSlideIndex = 0;
+        if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1;
+        showSlide(currentSlideIndex);
+    }
+
+    function currentSlide(index) {
+        currentSlideIndex = index - 1;
+        showSlide(currentSlideIndex);
+    }
+
+    // Auto-advance hero slides
+    setInterval(() => {
+        changeSlide(1);
+    }, 5000);
+
+    document.querySelector('.news-slider-nav.prev').addEventListener('click', () => changeNewsSlide(-1));
+    document.querySelector('.news-slider-nav.next').addEventListener('click', () => changeNewsSlide(1));
+
+    document.querySelector('.slider-nav.prev').addEventListener('click', () => changeSlide(-1));
+    document.querySelector('.slider-nav.next').addEventListener('click', () => changeSlide(1));
 });
 
 // Intersection Observer for fade-in animations
@@ -30,7 +285,20 @@ document.querySelectorAll('.fade-in').forEach(el => {
     observer.observe(el);
 });
 
-// Product card interaction
+// Product card hover effects
+document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('.product-card')) {
+        const card = e.target.closest('.product-card');
+        card.style.transform = 'translateY(-8px) scale(1.02)';
+    }
+});
+
+document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('.product-card')) {
+        const card = e.target.closest('.product-card');
+        card.style.transform = '';
+    }
+});
 document.querySelectorAll('.product-card').forEach(card => {
     card.addEventListener('mouseenter', function () {
         this.style.transform = 'translateY(-8px) scale(1.02)';
@@ -95,68 +363,6 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', function 
         this.reset();
     }
 });
-
-// News Slider functionality
-let currentNewsSlideIndex = 0;
-const newsSlides = document.querySelectorAll('.news-slide');
-const newsDots = document.querySelectorAll('.news-dot');
-const totalNewsSlides = newsSlides.length;
-
-function showNewsSlide(index) {
-    newsSlides.forEach(slide => slide.classList.remove('active'));
-    newsDots.forEach(dot => dot.classList.remove('active'));
-
-    newsSlides[index].classList.add('active');
-    newsDots[index].classList.add('active');
-}
-
-function changeNewsSlide(direction) {
-    currentNewsSlideIndex += direction;
-    if (currentNewsSlideIndex >= totalNewsSlides) currentNewsSlideIndex = 0;
-    if (currentNewsSlideIndex < 0) currentNewsSlideIndex = totalNewsSlides - 1;
-    showNewsSlide(currentNewsSlideIndex);
-}
-
-function currentNewsSlide(index) {
-    currentNewsSlideIndex = index - 1;
-    showNewsSlide(currentNewsSlideIndex);
-}
-
-// Auto-advance news slides
-setInterval(() => {
-    changeNewsSlide(1);
-}, 4000);
-
-// Hero Slider functionality
-let currentSlideIndex = 0;
-const slides = document.querySelectorAll('.slide');
-const dots = document.querySelectorAll('.dot');
-const totalSlides = slides.length;
-
-function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
-
-    slides[index].classList.add('active');
-    dots[index].classList.add('active');
-}
-
-function changeSlide(direction) {
-    currentSlideIndex += direction;
-    if (currentSlideIndex >= totalSlides) currentSlideIndex = 0;
-    if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1;
-    showSlide(currentSlideIndex);
-}
-
-function currentSlide(index) {
-    currentSlideIndex = index - 1;
-    showSlide(currentSlideIndex);
-}
-
-// Auto-advance hero slides
-setInterval(() => {
-    changeSlide(1);
-}, 5000);
 
 // Category card hover effects
 document.querySelectorAll('.category-card').forEach(card => {

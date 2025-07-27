@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TO DO company - Payment">
+    <link rel="icon" href="../static/images/Light.png" type="image/png" id="favicon">
+    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/css/payment.css">
+    <title>Checkout - TO DO company</title>
+</head>
+<body>
+    <div class="news-slider">
+        <div class="news-slider-container">
+            <div class="news-slide active">
+                <div class="news-slide-content">
+                    📢 New X1C firmware update available now!
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    🎉 Save 15% on all filaments this week
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    🚀 A1 mini wins "Best Entry-Level 3D Printer 2024" award
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    🔥 Limited time: Free shipping on orders over $200
+                </div>
+            </div>
+            <div class="news-slide">
+                <div class="news-slide-content">
+                    💡 New PLA+ formula now available in 20 colors
+                </div>
+            </div>
+        </div>
+        <button class="news-slider-nav prev" onclick="changeNewsSlide(-1)">‹</button>
+        <button class="news-slider-nav next" onclick="changeNewsSlide(1)">›</button>
+        <div class="news-slider-dots">
+            <span class="news-dot active" onclick="currentNewsSlide(1)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(2)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(3)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(4)"></span>
+            <span class="news-dot" onclick="currentNewsSlide(5)"></span>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🖨️ TO DO company</div>
+                <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+                <nav>
+                    <ul>
+                        <li class="dropdown">
+                            <a href="">Products</a>
+                            <div class="dropdown-content">
+                                <a href="#printers">All Printers</a>
+                                <a href="#">X1 Series</a>
+                                <a href="#">P1 Series</a>
+                                <a href="#">A1 Series</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#filaments"></a>
+                            <div class="dropdown-content">
+                                <a href="#filaments">All Filaments</a>
+                                <a href="#">PLA</a>
+                                <a href="#">ABS</a>
+                                <a href="#">PETG</a>
+                                <a href="#">Specialty</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#materials">Materials</a>
+                            <div class="dropdown-content">
+                                <a href="#materials">All Materials</a>
+                                <a href="#">Engineering</a>
+                                <a href="#">Flexible</a>
+                                <a href="#">Composite</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#accessories">Accessories</a>
+                            <div class="dropdown-content">
+                                <a href="#accessories">All Accessories</a>
+                                <a href="#">AMS</a>
+                                <a href="#">Nozzles</a>
+                                <a href="#">Build Plates</a>
+                                <a href="#">Maintenance</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#support">Support</a>
+                            <div class="dropdown-content">
+                                <a href="#support">Help Center</a>
+                                <a href="#">Downloads</a>
+                                <a href="#">Warranty</a>
+                                <a href="#">Contact Us</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="payment-page">
+        <div class="container">
+            <div class="payment-grid">
+                <section class="cart-summary">
+                    <h2>Order Summary</h2>
+                    <div class="cart-items">
+                        <div class="cart-item">
+                            <img src="https://cdn.prusa3d.com/content/images/product/default/3856.jpg" alt="X1C Carbon">
+                            <div class="item-details">
+                                <h3>Bambu Lab X1C Carbon</h3>
+                                <p class="configuration">Base Model</p>
+                                <p class="quantity">Quantity: 1</p>
+                            </div>
+                            <p class="price">$999.00</p>
+                        </div>
+                    </div>
+                    <div class="cart-totals">
+                        <div class="subtotal">
+                            <span>Subtotal</span>
+                            <span>$999.00</span>
+                        </div>
+                        <div class="shipping">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="tax">
+                            <span>Tax</span>
+                            <span>$79.92</span>
+                        </div>
+                        <div class="total">
+                            <span>Total</span>
+                            <span>$1,078.92</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payment Form Section -->
+                <section class="payment-form">
+                    <h2>Payment Details</h2>
+                    <form id="checkout-form">
+                        <div class="form-section">
+                            <h3>Shipping Address</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="address">Address</label>
+                                    <input type="text" id="address" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">City</label>
+                                    <input type="text" id="city" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="zipCode">ZIP Code</label>
+                                    <input type="text" id="zipCode" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Payment Method</h3>
+                            <div class="payment-methods">
+                                <label class="payment-method">
+                                    <input type="radio" name="payment" value="card" checked>
+                                    <span class="method-info">
+                                        <span class="method-name">Credit Card</span>
+                                        <span class="method-icons">💳</span>
+                                    </span>
+                                </label>
+                                <label class="payment-method">
+                                    <input type="radio" name="payment" value="paypal">
+                                    <span class="method-info">
+                                        <span class="method-name">PayPal</span>
+                                        <span class="method-icons">PayPal</span>
+                                    </span>
+                                </label>
+                            </div>
+                            
+                            <div id="card-details" class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="cardNumber">Card Number</label>
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="form-group">
+                                    <label for="expiry">Expiry Date</label>
+                                    <input type="text" id="expiry" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="pay-button">Pay $1,078.92</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="../static/scripts/index.js"></script>
+</body>
+</html>

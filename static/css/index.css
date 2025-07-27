@@ -643,52 +643,6 @@ body.dark-theme {
 }
 
 /* Product Detail Styles */
-.product-showcase {
-    background: #fff;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.product-hero {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-}
-
-.product-hero-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
-.product-hero-info {
-    padding: 1rem;
-}
-
-.product-hero-info h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #F8D000;
-    margin-bottom: 1rem;
-}
-
-.buy-button {
-    background: #F8D000;
-    color: white;
-    border: none;
-    padding: 1rem 2.5rem;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 1rem;
-    margin-right: 1.3em;
-}
 
 .blog-grid {
     display: grid;
