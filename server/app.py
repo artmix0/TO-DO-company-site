@@ -86,6 +86,23 @@ def save_products():
     SetFile(json.dumps(data), "products")
     return jsonify({"message": "Products saved successfully"})
 
+# API Routes for main products
+@app.route('/api/main-products', methods=['GET', 'OPTIONS'])
+def get_main_products():
+    if request.method == 'OPTIONS':
+        return make_response('', 200)
+    return json.loads(GetFile("main_products", '{"selectedIDs": []}'))
+
+@app.route('/api/main-products', methods=['POST', 'OPTIONS'])
+def save_main_products():
+    if request.method == 'OPTIONS':
+        return make_response('', 200)
+    data = request.get_json()
+    if len(data.get('selectedIDs', [])) > 6:
+        return jsonify({"error": "Cannot select more than 6 products"}), 400
+    SetFile(json.dumps(data), "main_products")
+    return jsonify({"message": "Main products saved successfully"})
+
 if getattr(sys, 'frozen', False):
     # Jeśli aplikacja jest skompilowana przez PyInstaller
     base_path = Path(sys._MEIPASS).parent

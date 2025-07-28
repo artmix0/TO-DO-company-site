@@ -5,91 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TO DO company - Your one-stop solution for task management and productivity.">
     <link rel="icon" href="../static/images/Light.png" type="image/png" id="favicon">
-    <link rel="stylesheet" href="../static/css/index.css">
-    <title>TO DO company</title>
+    <link rel="stylesheet" href="../static/css/admin.css">
+    <title>TO DO company - ADMIN</title>
 </head>
 <body>
     <main class="admin-dashboard">
         <div class="container">
             <div class="dashboard-grid">
-                <!-- News Slider Management -->
                 <section class="admin-section">
                     <h2>News Slider Management</h2>
                     <div class="announcement-list">
-                        <div class="announcement-item">
-                            <div class="announcement-content">
-                                <input type="text" value="New X1C firmware update available now!" class="announcement-input">
-                            </div>
-                            <div class="announcement-actions">
-                                <button class="edit-btn">Edit</button>
-                                <button class="delete-btn">Delete</button>
-                            </div>
-                        </div>
-                        <!-- Repeat for other announcements -->
                     </div>
                     <button class="add-announcement-btn">Add New Announcement</button>
                 </section>
 
-                <!-- Hero Slider Management -->
                 <section class="admin-section">
                     <h2>Hero Slider Management</h2>
                     <div class="hero-slides">
-                        <div class="hero-slide">
-                            <h3>Slide 1</h3>
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input type="text" value="Rethink Personal Manufacturing">
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea>State-of-the-art desktop 3D printers that break the barriers between digital and physical worlds</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Button Text</label>
-                                <input type="text" value="Explore Products">
-                            </div>
-                            <div class="form-group">
-                                <label>Button Link</label>
-                                <input type="text" value="#">
-                            </div>
-                        </div>
-                        <!-- Repeat for other slides -->
                     </div>
                     <button class="add-slide-btn">Add New Slide</button>
                 </section>
 
-                <!-- Product Management -->
-                <section class="admin-section full-width">
-                    <h2>Product Management</h2>
+                                <section class="admin-section full-width">
+                    <h2>All Products Management</h2>
+                    <p>Add and manage all available products</p>
                     <div class="product-list">
-                        <div class="product-item">
-                            <img src="https://cdn.prusa3d.com/content/images/product/default/3856.jpg" alt="Product">
-                            <div class="product-details">
-                                <div class="form-group">
-                                    <label>Product Name</label>
-                                    <input type="text" value="Bambu Lab X1C">
-                                </div>
-                                <div class="form-group">
-                                    <label>Price</label>
-                                    <input type="number" value="999.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Discount</label>
-                                    <input type="number" value="15">
-                                </div>
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <textarea>Best Deal for The Flagship</textarea>
-                                </div>
-                            </div>
-                            <div class="product-actions">
-                                <button class="save-btn">Save</button>
-                                <button class="delete-btn">Delete</button>
-                            </div>
-                        </div>
-                        <!-- Repeat for other products -->
                     </div>
                     <button class="add-product-btn">Add New Product</button>
+                </section>
+
+                <section class="admin-section full-width">
+                    <h2>Featured Products Management</h2>
+                    <p>Select up to 6 products to display on the main page</p>
+                    <div class="featured-products-list">
+                    </div>
                 </section>
             </div>
         </div>

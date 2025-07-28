@@ -21,7 +21,6 @@ async function loadAnnouncements() {
                     <input type="text" value="${announcement.text}" class="announcement-input">
                 </div>
                 <div class="announcement-actions">
-                    <button class="edit-btn">Edit</button>
                     <button class="delete-btn">Delete</button>
                 </div>
             `;
@@ -88,7 +87,7 @@ async function saveAnnouncements() {
             text: item.querySelector('.announcement-input').value
         });
     });
-    console.log(announcements);
+
     try {
         const response = await fetch('http://localhost:5000/api/announcements', {
             method: 'POST',
@@ -154,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input type="text" placeholder="New Announcement" class="announcement-input">
             </div>
             <div class="announcement-actions">
-                <button class="edit-btn">Edit</button>
                 <button class="delete-btn">Delete</button>
             </div>
         `;
@@ -162,56 +160,122 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAnnouncements();
     });
 
-    // Load products from JSON
+    // Load all products
     async function loadProducts() {
         try {
             const response = await fetch('http://localhost:5000/api/products');
             const data = await response.json();
             const productList = document.querySelector('.product-list');
+            const featuredProductsList = document.querySelector('.featured-products-list');
+            
+            // Clear existing products in both lists
             productList.innerHTML = '';
+            if (featuredProductsList) {
+                featuredProductsList.innerHTML = '';
+            }
 
-            data.products.forEach(product => {
+            data.products.forEach((product, index) => {
+                // Create product card for main product list
                 const newProduct = document.createElement('div');
                 newProduct.className = 'product-card fade-in';
                 newProduct.dataset.id = product.id;
                 newProduct.innerHTML = `
                     <div class="form-group">
                         <label>Sale Badge</label>
-                        <input type="text" value="${product.sale}" class="sale-badge-input">
+                        <input type="text" value="${product.sale}" class="sale-badge-input" placeholder="Sale Badge">
                     </div>
                     <div class="form-group">
                         <label>Image</label>
-                        <input type="text" value="${product.image}" class="product-image-input">
+                        <input type="text" value="${product.image}" class="product-image-input" placeholder="Image URL">
                     </div>
                     <div class="product-info">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" value="${product.name}" class="product-name-input">
+                            <input type="text" value="${product.name}" class="product-name-input" placeholder="Product Name">
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" value="${product.description}" class="product-description-input">
+                            <input type="text" value="${product.description}" class="product-description-input" placeholder="Product Description">
                         </div>
                         <div class="form-group">
                             <label>Features</label>
-                            <input type="text" value="${product.features}" class="product-features-input">
+                            <input type="text" value="${product.features}" class="product-features-input placeholder="Feature 1, Feature 2">
                         </div>
                         <div class="form-group">
                             <label>Price</label>
-                            <input type="text" value="${product.price}" class="product-price-input">
+                            <input type="text" value="${product.price}" class="product-price-input" placeholder="0.00">
                         </div>
                         <div class="admin-actions">
                             <button class="delete-btn">Delete</button>
                         </div>
                     </div>
                 `;
+                
+                // Create product card for featured products selection
+                if (featuredProductsList) {
+                    const featuredProductCard = document.createElement('div');
+                    featuredProductCard.className = 'featured-product-card';
+                    featuredProductCard.dataset.id = product.id;
+                    featuredProductCard.innerHTML = `
+                        <div class="product-info">
+                            <h4>${product.name}</h4>
+                            <p>${product.description}</p>
+                            <div class="price">${product.price}</div>
+                        </div>
+                        <div class="featured-actions">
+                            <button class="toggle-feature-btn">Add to Featured</button>
+                        </div>
+                    `;
+                    featuredProductsList.appendChild(featuredProductCard);
+                }
+                
                 productList.appendChild(newProduct);
             });
-        } catch (error) {
+            
+        }catch (error) {
             console.error('Error loading products:', error);
         }
     }
 
+    // Add New Product
+    document.querySelector('.add-product-btn').addEventListener('click', () => {
+        const productList = document.querySelector('.product-list');
+        const newProduct = document.createElement('div');
+        newProduct.className = 'product-card fade-in';
+        newProduct.dataset.id = productList.children.length + 1;
+        newProduct.innerHTML = `
+            <div class="form-group">
+                <label>Sale Badge</label>
+                <input type="text" value="" class="sale-badge-input" placeholder="Sale Badge">
+            </div>
+            <div class="form-group">
+                <label>Image</label>
+                <input type="text" value="" class="product-image-input" placeholder="Image URL">
+            </div>
+            <div class="product-info">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" value="" class="product-name-input" placeholder="Product Name">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" value="" class="product-description-input" placeholder="Product Description">
+                </div>
+                <div class="form-group">
+                    <label>Features</label>
+                    <input type="text" value="" class="product-features-input" placeholder="Feature 1, Feature 2">
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="text" value="" class="product-price-input" placeholder="0.00">
+                </div>
+                <div class="admin-actions">
+                    <button class="delete-btn">Delete</button>
+                </div>
+            </div>
+        `;
+        productList.appendChild(newProduct);
+    });
     // Save products to JSON
     async function saveProducts() {
         const products = [];
@@ -246,6 +310,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load existing products
     loadProducts();
+    loadMainProducts();
+
+    // Function to manage featured products
+    async function loadMainProducts() {
+        try {
+            const response = await fetch('http://localhost:5000/api/main-products');
+            const data = await response.json();
+            const selectedIDs = data.selectedIDs || [];
+
+            // Update UI to show selected products
+            document.querySelectorAll('.featured-product-card').forEach(card => {
+                // Ensure card has a dataset id
+                const id = parseInt(card.dataset.id);
+                const button = card.querySelector('.toggle-feature-btn');
+                if (selectedIDs.includes(id)) {
+                    button.classList.add('selected');
+                    button.textContent = 'Remove from Featured';
+                } else {
+                    button.classList.remove('selected');
+                    button.textContent = 'Add to Featured';
+                }
+            });
+        } catch (error) {
+            console.error('Error loading main products:', error);
+        }
+    }
+
+    // Function to save featured products
+    async function saveMainProducts() {
+        const selectedIDs = [];
+        document.querySelectorAll('.featured-product-card .toggle-feature-btn.selected').forEach(button => {
+            const card = button.closest('.featured-product-card');
+            selectedIDs.push(parseInt(card.dataset.id));
+        });
+
+        try {
+            const response = await fetch('http://localhost:5000/api/main-products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ selectedIDs })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('Error saving main products:', error);
+        }
+    }
+
+    // Handle featured product selection
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('toggle-feature-btn')) {
+            const selectedButtons = document.querySelectorAll('.toggle-feature-btn.selected');
+            
+            if (!e.target.classList.contains('selected') && selectedButtons.length >= 6) {
+                alert('You can only select up to 6 featured products');
+                return;
+            }
+
+            e.target.classList.toggle('selected');
+            e.target.textContent = e.target.classList.contains('selected') ? 
+                'Remove from Featured' : 'Add to Featured';
+            
+            saveMainProducts();
+        }
+    });
 
     // Add New Hero Slide
     document.querySelector('.add-slide-btn').addEventListener('click', () => {

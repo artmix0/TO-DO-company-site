@@ -87,37 +87,74 @@ async function loadHeroSlides() {
 // Load products from JSON
 async function loadProducts() {
     try {
-        const response = await fetch('http://localhost:5000/api/products', {
+        const productGrid = document.querySelector('.product-grid');
+        if (!productGrid) {
+            console.error('Product grid element not found! Ensure the HTML has a .product-grid element.');
+            return;
+        }
+
+        // Load all products
+        console.log('Fetching products from API...');
+        const productsResponse = await fetch('http://localhost:5000/api/products', {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         });
-        const data = await response.json();
-        const productGrid = document.querySelector('.product-grid');
 
-        // Clear existing products
+        const productsData = await productsResponse.json();
+        
+        // Load selected product indexes
+        console.log('Fetching main products configuration...');
+        const mainProductsResponse = await fetch('http://localhost:5000/api/main-products', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const mainProductsData = await mainProductsResponse.json();
+        
         productGrid.innerHTML = '';
 
-        data.products.forEach(product => {
+        // Check if we have selected indexes, if not show all products (up to 6)
+        const IDs = mainProductsData.selectedIDs || 
+                       Array.from({ length: Math.min(6, productsData.products.length) }, (_, i) => i);
+    
+        console.log('Displaying products with IDs:', productsData.products);
+        // Display products
+        IDs.forEach(id => {
+           const product = productsData.products.find(p => p.id === id);
+            
             const newProduct = document.createElement('div');
-            newProduct.className = 'product-card fade-in';
+            newProduct.className = 'product-card';
+            newProduct.style.display = 'flex';
+            newProduct.style.flexDirection = 'column';
             newProduct.innerHTML = `
-                <div class="sale-badge">${product.sale}</div>
-                <div class="product-image">${product.image}</div>
-                <div class="product-info">
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-description">${product.description}</p>
-                    <p class="product-features">${product.features}</p>
-                    <div class="product-price">${product.price}</div>
+                ${product.sale ? `<div class="sale-badge">${product.sale}</div>` : ''}
+                <div class="product-image" style="width: 100%; min-height: 200px;">
+                    ${product.image || 'No Image'}
+                </div>
+                <div class="product-info" style="padding: 15px;">
+                    <h3 class="product-name" style="margin: 0 0 10px 0;">${product.name || 'Unnamed Product'}</h3>
+                    <p class="product-description" style="margin: 0 0 10px 0;">${product.description || 'No description available'}</p>
+                    ${product.features ? `<p class="product-features">${product.features}</p>` : ''}
+                    <div class="product-price" style="font-weight: bold; margin: 10px 0;">${product.price || 'Price not set'}</div>
                     <button class="product-button click-effect">View product</button>
                 </div>
             `;
             productGrid.appendChild(newProduct);
+            console.log('Product card added to grid:', newProduct);
         });
+
+        console.log('Total products rendered:', productGrid.children.length);
     } catch (error) {
         console.error('Error loading products:', error);
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+            console.error('Network error - Is the server running at http://localhost:5000?');
+        }
     }
 }
 
@@ -164,10 +201,17 @@ async function loadAnnouncements() {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-    // Load data
-    await loadTopAnnouncements();
-    await loadHeroSlides();
-    await loadProducts();
+    try {
+        // Load data
+        await loadTopAnnouncements();
+        await loadHeroSlides();
+        await loadProducts();
+        
+        // Initialize ripple effects
+        initializeRippleEffects();
+    } catch (error) {
+        console.error('Error initializing page:', error);
+    }
 
     // Smooth scrolling
     document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
@@ -310,49 +354,87 @@ document.querySelectorAll('.product-card').forEach(card => {
 });
 
 // Button click effects
-document.querySelectorAll('.click-effect').forEach(button => {
-    button.addEventListener('click', function (e) {
-        // Create ripple effect
-        const ripple = document.createElement('span');
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
+function createRipple(event) {
+    const button = event.currentTarget;
+    
+    // Remove existing ripples
+    const existingRipple = button.querySelector('.ripple');
+    if (existingRipple) {
+        existingRipple.remove();
+    }
 
-        ripple.style.cssText = `
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    position: absolute;
-                    background: rgba(255, 255, 255, 0.5);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.6s linear;
-                    pointer-events: none;
-                `;
+    // Create new ripple
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+    
+    // Set button styles if not already set
+    if (getComputedStyle(button).position === 'static') {
+        button.style.position = 'relative';
+    }
+    button.style.overflow = 'hidden';
 
-        this.style.position = 'relative';
-        this.style.overflow = 'hidden';
-        this.appendChild(ripple);
+    // Calculate ripple size and position
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
 
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
+    // Apply ripple styles
+    ripple.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        position: absolute;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+    `;
+
+    button.appendChild(ripple);
+
+    // Clean up ripple after animation
+    ripple.addEventListener('animationend', () => {
+        ripple.remove();
     });
-});
+}
 
-// Add ripple animation
-const style = document.createElement('style');
-style.textContent = `
-            @keyframes ripple {
-                to {
-                    transform: scale(4);
-                    opacity: 0;
-                }
-            }
-        `;
-document.head.appendChild(style);
+// Add ripple effect to all elements with click-effect class
+function initializeRippleEffects() {
+    document.querySelectorAll('.click-effect').forEach(button => {
+        button.addEventListener('click', createRipple);
+    });
+}
+
+// Add ripple animation styles
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+    @keyframes ripple {
+        from {
+            transform: scale(0);
+            opacity: 1;
+        }
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    .click-effect {
+        position: relative;
+        overflow: hidden;
+    }
+    .click-effect .ripple {
+        background: rgba(255, 255, 255, 0.7);
+        position: absolute;
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+    }
+`;
+document.head.appendChild(rippleStyle);
 
 // Newsletter form submission
 document.querySelector('.newsletter-form')?.addEventListener('submit', function (e) {
