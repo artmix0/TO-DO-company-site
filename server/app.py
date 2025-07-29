@@ -4,8 +4,20 @@ import json
 import os
 import sys
 from pathlib import Path
+from werkzeug.utils import secure_filename
+import base64
+import uuid
 
 app = Flask(__name__, static_folder='../static', template_folder='../templates')
+
+if getattr(sys, 'frozen', False):
+    base_path = Path(sys._MEIPASS).parent
+else:
+    base_path = Path(__file__).parent.parent
+
+# Configure upload settings
+UPLOAD_FOLDER = f'{str(base_path)}\\static\\images\\Products_Images'
+ALLOWED_EXTENSIONS = {'jpg'}
 
 # Configure CORS with specific settings
 CORS(app, resources={
@@ -27,6 +39,65 @@ def after_request(response):
     return response
 
 DATA_DIR = '../data'
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/api/upload-image', methods=['POST'])
+def upload_image():
+    try:
+        product_id = request.form.get('productId')
+        if not product_id:
+            return jsonify({'error': 'No product ID provided'}), 400
+
+        # Get file extension from original file or default to .png
+        file_extension = '.png'
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                _, ext = os.path.splitext(file.filename)
+                if ext.lower() in ['.png', '.jpg', '.jpeg']:
+                    file_extension = ext.lower()
+
+        # Create filename from product ID
+        filename = f"{product_id}{file_extension}"
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+
+        # Ensure upload directory exists
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+        # Handle base64 upload
+        if 'file' not in request.files and 'image' in request.form:
+            image_data = request.form['image']
+            if 'base64,' in image_data:
+                image_data = image_data.split('base64,')[1]
+            image_bytes = base64.b64decode(image_data)
+            
+            with open(filepath, 'wb') as f:
+                f.write(image_bytes)
+            
+            return jsonify({
+                'success': True,
+                'filename': filename,
+                'url': f'../static/images/Products_Images/{filename}'
+            })
+
+        # Handle file upload
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+
+        if file and allowed_file(file.filename):
+            file.save(filepath)
+            return jsonify({
+                'success': True,
+                'filename': filename,
+                'url': f'../static/images/Products_Images/{filename}'
+            })
+
+        return jsonify({'error': 'File type not allowed'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Ensure data directory exists
 if not os.path.exists(DATA_DIR):
@@ -102,13 +173,6 @@ def save_main_products():
         return jsonify({"error": "Cannot select more than 6 products"}), 400
     SetFile(json.dumps(data), "main_products")
     return jsonify({"message": "Main products saved successfully"})
-
-if getattr(sys, 'frozen', False):
-    # Jeśli aplikacja jest skompilowana przez PyInstaller
-    base_path = Path(sys._MEIPASS).parent
-else:
-    # Jeśli aplikacja działa jako zwykły skrypt Pythona
-    base_path = Path(__file__).parent.parent
 
 def GetFile(File, NoFile):
     try:

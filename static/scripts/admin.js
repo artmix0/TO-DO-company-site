@@ -1,3 +1,40 @@
+// Handle file input changes and upload images
+async function handleImageUpload(fileInput, productId) {
+    const file = fileInput.files[0];
+    if (!file) return null;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        fileInput.value = '';
+        return null;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('productId', productId);
+
+    try {
+        const response = await fetch('http://localhost:5000/api/upload-image', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+
+        if (!response.ok) throw new Error('Upload failed');
+
+        const result = await response.json();
+        if (result.success) {
+            console.log('Image uploaded successfully:', result.url);
+            return result.url;
+        }
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        alert('Failed to upload image. Please try again.');
+        fileInput.value = '';
+    }
+    return null;
+}
+
 // Load top announcements from API
 async function loadAnnouncements() {
     try {
@@ -185,8 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <input type="text" value="${product.sale}" class="sale-badge-input" placeholder="Sale Badge">
                     </div>
                     <div class="form-group">
-                        <label>Image</label>
-                        <input type="text" value="${product.image}" class="product-image-input" placeholder="Image URL">
+                        <label>Product Image</label>
+                        <input type="file" accept="image/*" class="product-image-input">
+                        <div class="image-preview"></div>
                     </div>
                     <div class="product-info">
                         <div class="form-group">
@@ -229,6 +267,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     featuredProductsList.appendChild(featuredProductCard);
                 }
                 
+                // Add event listener for image upload
+                const imageInput = newProduct.querySelector('.product-image-input');
+                const imagePreview = newProduct.querySelector('.image-preview');
+                
+                imagePreview.innerHTML = `<img src="${product.image}" alt="Product Image" style="max-width: 200px;">`;
+
+                imageInput.addEventListener('change', async () => {
+                    console.log('Image input changed');
+                    const url = await handleImageUpload(imageInput, product.id);
+                    imagePreview.innerHTML = `<img src="${url}" alt="Product Image" style="max-width: 200px;">`;
+                    saveProducts();
+                });
+
                 productList.appendChild(newProduct);
             });
             
@@ -237,45 +288,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add New Product
+    // Add new product
     document.querySelector('.add-product-btn').addEventListener('click', () => {
         const productList = document.querySelector('.product-list');
+        const newId = document.querySelectorAll('.product-card').length + 1;
+        
         const newProduct = document.createElement('div');
-        newProduct.className = 'product-card fade-in';
-        newProduct.dataset.id = productList.children.length + 1;
+        newProduct.className = 'product-card';
+        newProduct.dataset.id = newId;
         newProduct.innerHTML = `
             <div class="form-group">
-                <label>Sale Badge</label>
-                <input type="text" value="" class="sale-badge-input" placeholder="Sale Badge">
+                <label>Product Image</label>
+                <input type="file" accept="image/*" class="product-image-input">
+                <div class="image-preview"></div>
             </div>
             <div class="form-group">
-                <label>Image</label>
-                <input type="text" value="" class="product-image-input" placeholder="Image URL">
+                <label>Product Name</label>
+                <input type="text" class="product-name-input" placeholder="Product Name">
             </div>
-            <div class="product-info">
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" value="" class="product-name-input" placeholder="Product Name">
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <input type="text" value="" class="product-description-input" placeholder="Product Description">
-                </div>
-                <div class="form-group">
-                    <label>Features</label>
-                    <input type="text" value="" class="product-features-input" placeholder="Feature 1, Feature 2">
-                </div>
-                <div class="form-group">
-                    <label>Price</label>
-                    <input type="text" value="" class="product-price-input" placeholder="0.00">
-                </div>
-                <div class="admin-actions">
-                    <button class="delete-btn">Delete</button>
-                </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="product-description-input" placeholder="Product Description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Features</label>
+                <textarea class="product-features-input" placeholder="Product Features"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <input type="text" class="product-price-input" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>Sale Badge (optional)</label>
+                <input type="text" class="sale-badge-input" placeholder="e.g., 20% OFF">
+            </div>
+            <div class="admin-actions">
+                <button class="delete-btn">Delete</button>
             </div>
         `;
+
+        // Add event listener for image upload
+        const imageInput = newProduct.querySelector('.product-image-input');
+        const imagePreview = newProduct.querySelector('.image-preview');
+        const imageUrlInput = newProduct.querySelector('.product-image-url');
+
+        imageInput.addEventListener('change', async () => {
+            console.log('Image input changed for product ID:', newProduct.dataset.id);
+            const url = await handleImageUpload(imageInput, newProduct.dataset.id);
+            console.log('Image URL:', url);
+            if (url) {
+                imageUrlInput.value = url;
+                imagePreview.innerHTML = `<img src="${url}" alt="Product Image" style="max-width: 200px;">`;
+                saveProducts();
+            }
+        });
+
         productList.appendChild(newProduct);
+        saveProducts();
     });
+
     // Save products to JSON
     async function saveProducts() {
         const products = [];
@@ -287,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 features: item.querySelector('.product-features-input').value,
                 price: item.querySelector('.product-price-input').value,
                 sale: item.querySelector('.sale-badge-input').value,
-                image: item.querySelector('.product-image-input').value
+                image: `../static/images/Products_Images/${item.dataset.id}.jpg`
             });
         });
 

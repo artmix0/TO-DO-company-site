@@ -343,6 +343,12 @@ nav ul {
     justify-content: center;
 }
 
+.product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
 .product-info {
     padding: 1.5rem;
     flex: 1;

@@ -135,7 +135,7 @@ async function loadProducts() {
             newProduct.innerHTML = `
                 ${product.sale ? `<div class="sale-badge">${product.sale}</div>` : ''}
                 <div class="product-image" style="width: 100%; min-height: 200px;">
-                    ${product.image || 'No Image'}
+                    <img src="${product.image}" alt="Product Image">
                 </div>
                 <div class="product-info" style="padding: 15px;">
                     <h3 class="product-name" style="margin: 0 0 10px 0;">${product.name || 'Unnamed Product'}</h3>
