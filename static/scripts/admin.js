@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 features: item.querySelector('.product-features-input').value,
                 price: item.querySelector('.product-price-input').value,
                 sale: item.querySelector('.sale-badge-input').value,
-                image: `../static/images/Products_Images/${item.dataset.id}.jpg`
+                image: `../static/images/Products_Images/${item.dataset.id}.png`
             });
         });
 

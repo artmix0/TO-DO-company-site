@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 from werkzeug.utils import secure_filename
 import base64
-import uuid
+from PIL import Image
+import io
 
 app = Flask(__name__, static_folder='../static', template_folder='../templates')
 
@@ -17,7 +18,7 @@ else:
 
 # Configure upload settings
 UPLOAD_FOLDER = f'{str(base_path)}\\static\\images\\Products_Images'
-ALLOWED_EXTENSIONS = {'jpg'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif'}
 
 # Configure CORS with specific settings
 CORS(app, resources={
@@ -50,52 +51,38 @@ def upload_image():
         if not product_id:
             return jsonify({'error': 'No product ID provided'}), 400
 
-        # Get file extension from original file or default to .png
-        file_extension = '.png'
-        if 'file' in request.files:
-            file = request.files['file']
-            if file.filename != '':
-                _, ext = os.path.splitext(file.filename)
-                if ext.lower() in ['.png', '.jpg', '.jpeg']:
-                    file_extension = ext.lower()
-
-        # Create filename from product ID
-        filename = f"{product_id}{file_extension}"
+        filename = f"{product_id}.png"
         filepath = os.path.join(UPLOAD_FOLDER, filename)
-
-        # Ensure upload directory exists
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-        # Handle base64 upload
         if 'file' not in request.files and 'image' in request.form:
             image_data = request.form['image']
             if 'base64,' in image_data:
                 image_data = image_data.split('base64,')[1]
             image_bytes = base64.b64decode(image_data)
-            
-            with open(filepath, 'wb') as f:
-                f.write(image_bytes)
-            
+
+            # Konwertuj na PNG
+            img = Image.open(io.BytesIO(image_bytes))
+            img.convert("RGBA").save(filepath, format="PNG")
+
             return jsonify({
                 'success': True,
                 'filename': filename,
                 'url': f'../static/images/Products_Images/{filename}'
             })
 
-        # Handle file upload
-        file = request.files['file']
-        if file.filename == '':
+        if 'file' not in request.files or request.files['file'].filename == '':
             return jsonify({'error': 'No selected file'}), 400
 
-        if file and allowed_file(file.filename):
-            file.save(filepath)
-            return jsonify({
-                'success': True,
-                'filename': filename,
-                'url': f'../static/images/Products_Images/{filename}'
-            })
+        file = request.files['file']
+        img = Image.open(file)
+        img.convert("RGBA").save(filepath, format="PNG")
 
-        return jsonify({'error': 'File type not allowed'}), 400
+        return jsonify({
+            'success': True,
+            'filename': filename,
+            'url': f'../static/images/Products_Images/{filename}'
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
