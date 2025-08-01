@@ -1,0 +1,287 @@
+/* Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* News Slider */
+.news-slider {
+    background: #FFC107;
+    color: white;
+    padding: 1rem 0;
+    position: relative;
+    overflow: hidden;
+    height: 60px;
+}
+
+.news-slider-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.news-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 60px;
+    pointer-events: none;
+}
+
+.news-slide.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.news-slide-content {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.news-slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.news-slider-nav:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.news-slider-nav.prev {
+    left: 15px;
+}
+
+.news-slider-nav.next {
+    right: 15px;
+}
+
+.news-slider-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+}
+
+.news-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.news-dot.active {
+    background: white;
+}
+
+/* Header */
+header {
+    background: var(--header-bg);
+    box-shadow: var(--header-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Navigation */
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    position: relative;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown > a,
+.dropdown > button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.dropdown > a:hover,
+.dropdown > button:hover {
+    color: var(--primary-color);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 2.2rem;
+    left: 0;
+    background: var(--dropdown-bg);
+    min-width: 180px;
+    box-shadow: var(--dropdown-shadow);
+    border-radius: 8px;
+    z-index: 200;
+    flex-direction: column;
+    padding: 0.5rem 0;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 0.7rem 1.2rem;
+    text-decoration: none;
+    display: block;
+    font-size: 0.98rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background: var(--dropdown-hover-bg);
+    color: var(--primary-color);
+}
+
+.dropdown:hover > .dropdown-content,
+.dropdown:focus-within > .dropdown-content,
+.dropdown.open > .dropdown-content {
+    display: flex;
+}
+
+/* Section styles */
+.section {
+    padding: 4rem 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: var(--heading-color);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Button styles */
+.button, .product-button, .buy-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.button:hover {
+    background: var(--primary-hover-color);
+    transform: translateY(-2px);
+    box-shadow: var(--button-hover-shadow);
+}
+
+/* Sale badge */
+.sale-badge {
+    display: inline-block;
+    background: var(--sale-badge-bg);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.sale-badge:hover {
+    transform: scale(1.05);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        min-width: 100%;
+    }
+
+    .button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}

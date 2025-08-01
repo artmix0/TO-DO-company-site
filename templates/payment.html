@@ -5,47 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TO DO company - Payment">
     <link rel="icon" href="../static/images/Light.png" type="image/png" id="favicon">
-    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/css/theme.css">
+    <link rel="stylesheet" href="../static/css/general.css">
     <link rel="stylesheet" href="../static/css/payment.css">
     <title>Checkout - TO DO company</title>
+    <script src="../static/scripts/general_functionality.js"></script>
+    <script src="../static/scripts/payment.js"></script>
 </head>
 <body>
     <div class="news-slider">
         <div class="news-slider-container">
-            <div class="news-slide active">
-                <div class="news-slide-content">
-                    📢 New X1C firmware update available now!
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    🎉 Save 15% on all filaments this week
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    🚀 A1 mini wins "Best Entry-Level 3D Printer 2024" award
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    🔥 Limited time: Free shipping on orders over $200
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    💡 New PLA+ formula now available in 20 colors
-                </div>
-            </div>
         </div>
         <button class="news-slider-nav prev" onclick="changeNewsSlide(-1)">‹</button>
         <button class="news-slider-nav next" onclick="changeNewsSlide(1)">›</button>
         <div class="news-slider-dots">
-            <span class="news-dot active" onclick="currentNewsSlide(1)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(2)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(3)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(4)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(5)"></span>
         </div>
     </div>
 
@@ -109,43 +82,19 @@
         </div>
     </header>
 
+    <div class="cart-container">
+        <div class="container">
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-items">
+            </div>
+            <div id="cart-summary">
+            </div>
+        </div>
+    </div>
+
     <main class="payment-page">
         <div class="container">
             <div class="payment-grid">
-                <section class="cart-summary">
-                    <h2>Order Summary</h2>
-                    <div class="cart-items">
-                        <div class="cart-item">
-                            <img src="https://cdn.prusa3d.com/content/images/product/default/3856.jpg" alt="X1C Carbon">
-                            <div class="item-details">
-                                <h3>Bambu Lab X1C Carbon</h3>
-                                <p class="configuration">Base Model</p>
-                                <p class="quantity">Quantity: 1</p>
-                            </div>
-                            <p class="price">$999.00</p>
-                        </div>
-                    </div>
-                    <div class="cart-totals">
-                        <div class="subtotal">
-                            <span>Subtotal</span>
-                            <span>$999.00</span>
-                        </div>
-                        <div class="shipping">
-                            <span>Shipping</span>
-                            <span>Free</span>
-                        </div>
-                        <div class="tax">
-                            <span>Tax</span>
-                            <span>$79.92</span>
-                        </div>
-                        <div class="total">
-                            <span>Total</span>
-                            <span>$1,078.92</span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Payment Form Section -->
                 <section class="payment-form">
                     <h2>Payment Details</h2>
                     <form id="checkout-form">
@@ -216,7 +165,5 @@
             </div>
         </div>
     </main>
-
-    <script src="../static/scripts/index.js"></script>
 </body>
 </html>

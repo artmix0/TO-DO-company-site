@@ -1,43 +1,3 @@
-async function loadTopAnnouncements() {
-    try {
-        const response = await fetch('http://localhost:5000/api/announcements', {
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        const newsSliderContainer = document.querySelector('.news-slider-container');
-
-        // Clear existing announcements
-        newsSliderContainer.innerHTML = '';
-
-        data.announcements.forEach((announcement, index) => {
-            const newSlide = document.createElement('div');
-            newSlide.className = `news-slide ${index === 0 ? 'active' : ''}`;
-            newSlide.innerHTML = `
-                <div class="news-slide-content">
-                    ${announcement.text}
-                </div>
-            `;
-            newsSliderContainer.appendChild(newSlide);
-        });
-
-        // Update dots for news slider
-        const dotsContainer = document.querySelector('.news-slider-dots');
-        dotsContainer.innerHTML = '';
-        for (let i = 0; i < data.announcements.length; i++) {
-            const dot = document.createElement('span');
-            dot.className = `news-dot ${i === 0 ? 'active' : ''}`;
-            dot.onclick = () => currentNewsSlide(i + 1);
-            dotsContainer.appendChild(dot);
-        }
-    } catch (error) {
-        console.error('Error loading top announcements:', error);
-    }
-}
-
 // Load hero slides from JSON
 async function loadHeroSlides() {
     try {
@@ -199,6 +159,12 @@ async function loadAnnouncements() {
     }
 }
 
+function initializeRippleEffects() {
+    document.querySelectorAll('.click-effect').forEach(button => {
+        button.addEventListener('click', createRipple);
+    });
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -242,37 +208,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // News Slider functionality
-    let currentNewsSlideIndex = 0;
-    const newsSlides = document.querySelectorAll('.news-slide');
-    const newsDots = document.querySelectorAll('.news-dot');
-    const totalNewsSlides = newsSlides.length;
-
-    function showNewsSlide(index) {
-        newsSlides.forEach(slide => slide.classList.remove('active'));
-        newsDots.forEach(dot => dot.classList.remove('active'));
-
-        newsSlides[index].classList.add('active');
-        newsDots[index].classList.add('active');
-    }
-
-    function changeNewsSlide(direction) {
-        currentNewsSlideIndex += direction;
-        if (currentNewsSlideIndex >= totalNewsSlides) currentNewsSlideIndex = 0;
-        if (currentNewsSlideIndex < 0) currentNewsSlideIndex = totalNewsSlides - 1;
-        showNewsSlide(currentNewsSlideIndex);
-    }
-
-    function currentNewsSlide(index) {
-        currentNewsSlideIndex = index - 1;
-        showNewsSlide(currentNewsSlideIndex);
-    }
-
-    // Auto-advance news slides
-    setInterval(() => {
-        changeNewsSlide(1);
-    }, 4000);
-
     // Hero Slider functionality
     let currentSlideIndex = 0;
     const slides = document.querySelectorAll('.slide');
@@ -303,9 +238,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setInterval(() => {
         changeSlide(1);
     }, 5000);
-
-    document.querySelector('.news-slider-nav.prev').addEventListener('click', () => changeNewsSlide(-1));
-    document.querySelector('.news-slider-nav.next').addEventListener('click', () => changeNewsSlide(1));
 
     document.querySelector('.slider-nav.prev').addEventListener('click', () => changeSlide(-1));
     document.querySelector('.slider-nav.next').addEventListener('click', () => changeSlide(1));
@@ -353,89 +285,6 @@ document.querySelectorAll('.product-card').forEach(card => {
     });
 });
 
-// Button click effects
-function createRipple(event) {
-    const button = event.currentTarget;
-    
-    // Remove existing ripples
-    const existingRipple = button.querySelector('.ripple');
-    if (existingRipple) {
-        existingRipple.remove();
-    }
-
-    // Create new ripple
-    const ripple = document.createElement('span');
-    ripple.classList.add('ripple');
-    
-    // Set button styles if not already set
-    if (getComputedStyle(button).position === 'static') {
-        button.style.position = 'relative';
-    }
-    button.style.overflow = 'hidden';
-
-    // Calculate ripple size and position
-    const rect = button.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = event.clientX - rect.left - size / 2;
-    const y = event.clientY - rect.top - size / 2;
-
-    // Apply ripple styles
-    ripple.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}px;
-        top: ${y}px;
-        position: absolute;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 50%;
-        transform: scale(0);
-        animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
-    `;
-
-    button.appendChild(ripple);
-
-    // Clean up ripple after animation
-    ripple.addEventListener('animationend', () => {
-        ripple.remove();
-    });
-}
-
-// Add ripple effect to all elements with click-effect class
-function initializeRippleEffects() {
-    document.querySelectorAll('.click-effect').forEach(button => {
-        button.addEventListener('click', createRipple);
-    });
-}
-
-// Add ripple animation styles
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        from {
-            transform: scale(0);
-            opacity: 1;
-        }
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-    .click-effect {
-        position: relative;
-        overflow: hidden;
-    }
-    .click-effect .ripple {
-        background: rgba(255, 255, 255, 0.7);
-        position: absolute;
-        border-radius: 50%;
-        transform: scale(0);
-        animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
-    }
-`;
-document.head.appendChild(rippleStyle);
-
 // Newsletter form submission
 document.querySelector('.newsletter-form')?.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -445,53 +294,3 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', function 
         this.reset();
     }
 });
-
-// Category card hover effects
-document.querySelectorAll('.category-card').forEach(card => {
-    card.addEventListener('mouseenter', function () {
-        this.style.transform = 'translateY(-3px)';
-        this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
-    });
-
-    card.addEventListener('mouseleave', function () {
-        this.style.transform = 'translateY(0)';
-        this.style.boxShadow = 'none';
-    });
-});
-
-// Dropdown menu click for mobile/touch
-document.querySelectorAll('.dropdown > a').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        if (window.innerWidth <= 768) {
-            e.preventDefault();
-            const parent = this.parentElement;
-            parent.classList.toggle('open');
-            // Close others
-            document.querySelectorAll('.dropdown').forEach(d => {
-                if (d !== parent) d.classList.remove('open');
-            });
-        }
-    });
-});
-// Close dropdowns on outside click (mobile)
-document.addEventListener('click', function (e) {
-    if (window.innerWidth <= 768) {
-        document.querySelectorAll('.dropdown').forEach(d => {
-            if (!d.contains(e.target)) d.classList.remove('open');
-        });
-    }
-});
-
-// Theme Toggle Functionality
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isNight = document.body.classList.contains('dark-theme');
-    favicon.setAttribute('href', isNight ? '../static/images/Dark.png' : '../static/images/Light.png');
-    localStorage.setItem('darkTheme', isNight);
-}
-
-// Check for saved theme preference
-if (localStorage.getItem('darkTheme') === 'true') {
-    document.body.classList.add('dark-theme');
-    favicon.setAttribute('href', '../static/images/Dark.png');
-}

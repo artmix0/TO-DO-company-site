@@ -99,6 +99,26 @@ def index():
 def admin():
    return render_template('admin_panel.html')
 
+@app.route('/products')
+def products():
+    return render_template('products.html')
+
+@app.route('/payment')
+def payment():
+    return render_template('payment.html')
+
+@app.route('/about_us')
+def about_us():
+    return render_template('about_us.html')
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+@app.route('/contact_form')
+def contact_form():
+    return render_template('contact_form.html')
+
 # API Routes for announcements
 @app.route('/api/announcements', methods=['GET', 'OPTIONS'])
 def get_announcements():

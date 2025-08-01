@@ -5,47 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TO DO company - Your one-stop solution for task management and productivity.">
     <link rel="icon" href="../static/images/Light.png" type="image/png" id="favicon">
-    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/css/theme.css">
+    <link rel="stylesheet" href="../static/css/general.css">
     <link rel="stylesheet" href="../static/css/products.css">
     <title>TO DO company</title>
+    <script src="../static/scripts/general_functionality.js"></script>
+    <script src="../static/scripts/products.js"></script>
 </head>
 <body>
     <div class="news-slider">
         <div class="news-slider-container">
-            <div class="news-slide active">
-                <div class="news-slide-content">
-                    📢 New X1C firmware update available now!
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    🎉 Save 15% on all filaments this week
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    🚀 A1 mini wins "Best Entry-Level 3D Printer 2024" award
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    🔥 Limited time: Free shipping on orders over $200
-                </div>
-            </div>
-            <div class="news-slide">
-                <div class="news-slide-content">
-                    💡 New PLA+ formula now available in 20 colors
-                </div>
-            </div>
         </div>
-        <button class="news-slider-nav prev" onclick="changeNewsSlide(-1)">‹</button>
-        <button class="news-slider-nav next" onclick="changeNewsSlide(1)">›</button>
+        <button class="news-slider-nav prev">‹</button>
+        <button class="news-slider-nav next">›</button>
         <div class="news-slider-dots">
-            <span class="news-dot active" onclick="currentNewsSlide(1)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(2)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(3)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(4)"></span>
-            <span class="news-dot" onclick="currentNewsSlide(5)"></span>
         </div>
     </div>
 
@@ -111,32 +84,11 @@
 
     <section class="section product-detail" id="product-detail">
         <h2 class="section-title">Explore our products!</h2>
-            <div class="product-showcase">
-                <div class="product-hero">
-                    <div class="product-hero-image">
-                        <img src="../static/images/Products_Images/test.jpg" alt="Photo">
-                    </div>
-                    <div class="product-hero-info">
-                        <h1>Bambu Lab X1C Carbon</h1>
-                        <p class="price">$999.00 USD</p>
-                        <div class="description">
-                            <p>The X1C Carbon is our flagship model featuring:</p>
-                            <ul>
-                                <li>Core XY architecture</li>
-                                <li>Built-in camera for remote monitoring</li>
-                                <li>AI-powered failure detection</li>
-                                <li>Multi-material printing capability</li>
-                            </ul>
-                        </div>
-                        <aside>
-                            <button class="buy-button click-effect">Add to Cart</button>
-                            <button class="buy-button click-effect">Buy now</button>
-                        </aside>
-                    </div>
-                </div>
-            </div>  
+        <div class="product-showcase">
+        </div>  
     </section>
 
-    <script src="../static/scripts/index.js"></script>
+    <script src="../static/scripts/general_functionality.js"></script>
+    <script src="../static/scripts/products.js"></script>
 </body>
 </html>
