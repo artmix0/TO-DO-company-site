@@ -60,7 +60,8 @@ function removeFromCart(productId) {
 }
 
 function proceedToCheckout() {
-    
+    // This function will be implemented when adding checkout functionality
+    alert('Checkout functionality coming soon!');
 }
 
 // Initialize cart display when page loads
