@@ -167,21 +167,7 @@ function initializeCart() {
     window.cart = JSON.parse(localStorage.getItem('cart') || '[]');
     updateCartBadge();
 
-    // Add cart icon to header
-    const headerContent = document.querySelector('.header-content');
-    const cartIcon = document.createElement('div');
-    cartIcon.className = 'cart-icon';
-    cartIcon.innerHTML = `
-        🛒
-        <span class="cart-badge">0</span>
-    `;
-    cartIcon.addEventListener('click', () => window.location.href = '/payment');
-    headerContent.insertBefore(cartIcon, headerContent.querySelector('.theme-toggle'));
-
-    // Create notification container
-    const notification = document.createElement('div');
-    notification.className = 'cart-notification';
-    document.body.appendChild(notification);
+    document.querySelector('.cart-icon').addEventListener('click', () => window.location.href = '/payment')
 }
 
 function updateCartBadge() {
@@ -195,8 +181,7 @@ function updateCartBadge() {
 function showCartNotification(product) {
     const notification = document.querySelector('.cart-notification');
     notification.innerHTML = `
-        <strong>${product.name}</strong> added to cart!
-        <br><br>
+        <div><strong>${product.name}</strong> added to cart!</div>
         <button class="click-effect" onclick="window.location.href='/payment'">View Cart</button>
     `;
     notification.classList.add('show');
@@ -228,7 +213,12 @@ function addToCart(product) {
 document.addEventListener('DOMContentLoaded', async () => {
     addRippleStyles();
     initializeTheme();
-    initializeCart();
+
+    if (document.querySelector('title').innerText!='Checkout - TO DO company'){
+        console.log("hfh")
+        initializeCart();
+    }
+    
     initializeMobileMenu();
 
     await loadTopAnnouncements();
@@ -262,7 +252,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.news-slider-nav.prev').addEventListener('click', () => changeNewsSlide(-1));
     document.querySelector('.news-slider-nav.next').addEventListener('click', () => changeNewsSlide(1));
 
-    document.querySelector('.logo').addEventListener('click', () => {
-    window.location.href = '/';
-    }); 
+    document.querySelector('.logo').addEventListener('click', () => window.location.href = '/');    
+    
 });

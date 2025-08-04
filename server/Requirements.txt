@@ -1,0 +1,6 @@
+Flask
+flask-cors
+waitress
+Pillow
+
+pip install Flask flask-cors waitress Pillow

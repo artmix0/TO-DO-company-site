@@ -6,8 +6,6 @@
     --error-color: #ff4444;
     --success-color: #22c55e;
     --cart-badge-bg: #ff4444;
-    --cart-notification-bg: rgba(255, 255, 255, 0.95);
-    --cart-notification-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 
     /* Light theme - Base */
     --bg-color: #fff;
@@ -23,6 +21,8 @@
     --card-hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     --image-bg: #f5f5f5;
     --price-shadow: none;
+    --cart-notification-bg: rgba(255, 255, 255, 0.95);
+    --cart-notification-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     
     /* Light theme - Header */
     --header-bg: #fff;
@@ -56,6 +56,8 @@
     --price-shadow: 0 0 10px rgba(248, 208, 0, 0.3);
     --border-color: #444;
     --input-bg: #333;
+    --cart-notification-bg: rgba(0, 0, 0, 0.95);
+    --cart-notification-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
     
     /* Dark theme - Header */
     --header-bg: #2a2a2a;

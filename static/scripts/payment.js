@@ -1,9 +1,11 @@
+window.cart = JSON.parse(localStorage.getItem('cart') || '{}');
+console.log(cart);
+
 function displayCart() {
     const cartItems = document.getElementById('cart-items');
     const cartSummary = document.getElementById('cart-summary');
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 
-    if (cart.length === 0) {
+    if (window.cart.length === 0) {
         // Hide cart summary section when cart is empty
         document.querySelector('.payment-grid').style.display = 'none';
         
@@ -20,7 +22,7 @@ function displayCart() {
     }
 
     // Display cart items
-    cartItems.innerHTML = cart.map(item => `
+    cartItems.innerHTML = window.cart.map(item => `
         <div class="cart-item">
             <img src="${item.image}" alt="${item.name}">
             <div class="cart-item-details">
@@ -39,7 +41,7 @@ function displayCart() {
     cartSummary.style.display = 'block';
     
     // Calculate and display total
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = window.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     cartSummary.innerHTML = `
         <div class="cart-total">
             Total: $${total.toFixed(2)}
@@ -49,14 +51,17 @@ function displayCart() {
 }
 
 function removeFromCart(productId) {
-    window.cart = window.cart.filter(item => item.id !== productId);
-    localStorage.setItem('cart', JSON.stringify(window.cart));
-    updateCartBadge();
-    
-    // If we're on the payment page, update the cart display
-    if (window.location.pathname === '/payment') {
-        displayCart();
+    let product = window.cart.find(item => item.id == productId);
+    console.log(product)
+    if (product.quantity > 1){
+        product.quantity -= 1
+        localStorage.setItem('cart', JSON.stringify(window.cart))
     }
+    else{
+        window.cart = window.cart.filter(item => item != product)
+        localStorage.setItem('cart', JSON.stringify(window.cart));
+    }
+    displayCart();
 }
 
 function proceedToCheckout() {

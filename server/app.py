@@ -1,10 +1,13 @@
 from flask import Flask, request, jsonify, send_from_directory, render_template, make_response
 from flask_cors import CORS
+from waitress import serve
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import json
 import os
 import sys
 from pathlib import Path
-from werkzeug.utils import secure_filename
 import base64
 from PIL import Image
 import io
@@ -29,15 +32,6 @@ CORS(app, resources={
         "supports_credentials": True
     }
 })
-
-# Add CORS headers to all responses
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5000')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
-    return response
 
 DATA_DIR = '../data'
 
@@ -120,61 +114,45 @@ def contact_form():
     return render_template('contact_form.html')
 
 # API Routes for announcements
-@app.route('/api/announcements', methods=['GET', 'OPTIONS'])
+@app.route('/api/announcements', methods=['GET'])
 def get_announcements():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     return json.loads(GetFile("announcements", "{}"))
 
-@app.route('/api/announcements', methods=['POST', 'OPTIONS'])
+@app.route('/api/announcements', methods=['POST'])
 def save_announcements():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     data = request.get_json()
     SetFile(json.dumps(data), "announcements")
     return jsonify({"message": "Announcements saved successfully"})
 
 # API Routes for hero slides
-@app.route('/api/hero-slides', methods=['GET', 'OPTIONS'])
+@app.route('/api/hero-slides', methods=['GET'])
 def get_hero_slides():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     return json.loads(GetFile("hero_slides", "{}"))
 
-@app.route('/api/hero-slides', methods=['POST', 'OPTIONS'])
+@app.route('/api/hero-slides', methods=['POST'])
 def save_hero_slides():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     data = request.get_json()
     SetFile(json.dumps(data), "hero_slides")
     return jsonify({"message": "Hero slides saved successfully"})
 
 # API Routes for products
-@app.route('/api/products', methods=['GET', 'OPTIONS'])
+@app.route('/api/products', methods=['GET'])
 def get_products():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     return json.loads(GetFile("products", "{}"))
 
-@app.route('/api/products', methods=['POST', 'OPTIONS'])
+@app.route('/api/products', methods=['POST'])
 def save_products():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     data = request.get_json()
     SetFile(json.dumps(data), "products")
     return jsonify({"message": "Products saved successfully"})
 
 # API Routes for main products
-@app.route('/api/main-products', methods=['GET', 'OPTIONS'])
+@app.route('/api/main-products', methods=['GET'])
 def get_main_products():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     return json.loads(GetFile("main_products", '{"selectedIDs": []}'))
 
-@app.route('/api/main-products', methods=['POST', 'OPTIONS'])
+@app.route('/api/main-products', methods=['POST'])
 def save_main_products():
-    if request.method == 'OPTIONS':
-        return make_response('', 200)
     data = request.get_json()
     if len(data.get('selectedIDs', [])) > 6:
         return jsonify({"error": "Cannot select more than 6 products"}), 400
@@ -200,6 +178,29 @@ def SetFile(SetFile, File):
     with open(path, 'w') as f:
         f.write(str(SetFile))
 
+my_email = GetFile('my_email', '{"main_email": {"email": "", "password": ""}}')
+
+def send_email(serwer_email, reciepent, subject, body):
+    if serwer_email['email'] == "" or serwer_email['password'] == "":
+        print("Nie skonfigurowano adresu e-mail.")
+        return
+    msg = MIMEMultipart()
+    msg['From'] = serwer_email["email"]
+    msg['To'] = reciepent
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.poczta.onet.pl', 587)
+        server.starttls()
+        server.login(serwer_email["email"], serwer_email["password"])
+        text = msg.as_string()
+        server.sendmail(serwer_email["email"], reciepent, text)
+        server.quit()
+        print("E-mail wysłany pomyślnie")
+    except Exception as e:
+        print(f"Błąd podczas wysyłania e-maila: {e}")
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    serve(app, host='0.0.0.0', port=5000, threads=4)
