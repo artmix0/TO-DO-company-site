@@ -1,6 +1,6 @@
 async function loadTopAnnouncements() {
     try {
-        const response = await fetch('http://localhost:5000/api/announcements', {
+        const response = await fetch('/api/announcements', {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
@@ -52,6 +52,12 @@ function initializeTheme() {
         document.body.classList.add('dark-theme');
         favicon.setAttribute('href', '../static/images/Dark.png');
     }
+}
+
+function initializeRippleEffects() {
+    document.querySelectorAll('.click-effect').forEach(button => {
+        button.addEventListener('click', createRipple);
+    });
 }
 
 // Ripple effect for buttons

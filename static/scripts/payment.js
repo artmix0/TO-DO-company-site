@@ -1,7 +1,7 @@
 window.cart = JSON.parse(localStorage.getItem('cart') || '{}');
 console.log(cart);
 
-function displayCart() {
+async function displayCart() {
     const cartItems = document.getElementById('cart-items');
     const cartSummary = document.getElementById('cart-summary');
 
@@ -46,7 +46,7 @@ function displayCart() {
         <div class="cart-total">
             Total: $${total.toFixed(2)}
         </div>
-        <button class="pay-button click-effect" onclick="proceedToCheckout()">Proceed to Checkout</button>
+        <button class="checkout-button click-effect">Proceed to Checkout</button>
     `;
 }
 
@@ -64,11 +64,42 @@ function removeFromCart(productId) {
     displayCart();
 }
 
-function proceedToCheckout() {
-    
-}
-
 // Initialize cart display when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    displayCart();
+document.addEventListener('DOMContentLoaded', async () => {
+    await displayCart();
+    initializeRippleEffects();
+
+    document.querySelector('.checkout-button').addEventListener('click', (e) => {
+    e.preventDefault();
+    const form = document.querySelector('.payment-form');
+    form.classList.add('show');
+    });
+
+    document.querySelector('.pay-button').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const response = await fetch('/api/checkout', {
+            method: 'POST',
+            body: JSON.stringify({
+                orderDetails: window.cart,
+                firstName: document.querySelector('input[id="firstName"]').value,
+                lastName: document.querySelector('input[id="lastName"]').value,
+                email: document.querySelector('input[id="email"]').value,
+                address: document.querySelector('input[id="address"]').value,
+                city: document.querySelector('input[id="city"]').value,
+                zipCode: document.querySelector('input[id="zipCode"]').value,
+                number: 0
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (response.status === 200) {
+            // Handle successful payment
+            alert('Payment successful!');
+        } else {
+            // Handle payment error
+            alert('Payment failed. Please try again.');
+        }
+    });
 });

@@ -11,6 +11,8 @@ from pathlib import Path
 import base64
 from PIL import Image
 import io
+from datetime import datetime
+import random
 
 app = Flask(__name__, static_folder='../static', template_folder='../templates')
 
@@ -132,7 +134,7 @@ def get_hero_slides():
 @app.route('/api/hero-slides', methods=['POST'])
 def save_hero_slides():
     data = request.get_json()
-    SetFile(json.dumps(data), "hero_slides")
+    SetFile(data    , "hero_slides")
     return jsonify({"message": "Hero slides saved successfully"})
 
 # API Routes for products
@@ -143,7 +145,7 @@ def get_products():
 @app.route('/api/products', methods=['POST'])
 def save_products():
     data = request.get_json()
-    SetFile(json.dumps(data), "products")
+    SetFile(data, "products")
     return jsonify({"message": "Products saved successfully"})
 
 # API Routes for main products
@@ -156,8 +158,48 @@ def save_main_products():
     data = request.get_json()
     if len(data.get('selectedIDs', [])) > 6:
         return jsonify({"error": "Cannot select more than 6 products"}), 400
-    SetFile(json.dumps(data), "main_products")
+    SetFile(data, "main_products")
     return jsonify({"message": "Main products saved successfully"})
+
+@app.route('/api/checkout', methods=['POST'])
+def send_order():
+    data = request.get_json()
+    if not data or 'email' not in data or 'orderDetails' not in data:
+        return jsonify({"error": "Invalid data"}), 400
+    email = data.get('email', '')
+    order_details = data.get('orderDetails', {})
+    firstName = data.get('firstName', 'Customer')
+    lastName = data.get('lastName', '')
+    address = data.get('address', '')
+    city = data.get('city', '')
+    zip_code = data.get('zipCode', '')
+    number = f"{datetime.now().day:02d}{random.randrange(1, 9)}{random.randrange(1, 9)}{datetime.now().hour:02d}{random.randrange(1, 9)}{datetime.now().month:02d}{random.randrange(1, 9)}"
+
+    orders_list = json.loads(GetFile('orders', '{}'))
+    orders_list[number] = {
+        "email": email,
+        "firstName": firstName,
+        "lastName": lastName,
+        "address": address,
+        "city": city,
+        "zip_code": zip_code,
+        "state": 0,
+        "order_details": order_details
+    }
+    SetFile(orders_list, 'orders')
+
+    #send_email(my_email, email, f"New order recived! NR {number}", ?????)
+
+    return jsonify({"message": "Order received successfully"}), 200
+
+@app.route('/api/orders', methods=['GET'])
+def get_orders():
+    orders = GetFile("orders", "{}")
+    try:
+        orders = json.loads(orders)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Failed to decode orders data"}), 500
+    return jsonify(orders)
 
 def GetFile(File, NoFile):
     try:
@@ -176,9 +218,7 @@ def GetFile(File, NoFile):
 def SetFile(SetFile, File):
     path = f'{str(base_path)}\\data\\{File}.json'
     with open(path, 'w') as f:
-        f.write(str(SetFile))
-
-my_email = GetFile('my_email', '{"main_email": {"email": "", "password": ""}}')
+        f.write(json.dumps(SetFile))
 
 def send_email(serwer_email, reciepent, subject, body):
     if serwer_email['email'] == "" or serwer_email['password'] == "":
@@ -202,5 +242,8 @@ def send_email(serwer_email, reciepent, subject, body):
     except Exception as e:
         print(f"Błąd podczas wysyłania e-maila: {e}")
 
+my_email = GetFile('my_email', '{"main_email": {"email": "", "password": ""}}')
+
 if __name__ == '__main__':
-    serve(app, host='0.0.0.0', port=5000, threads=4)
+    app.run(debug=True, host='0.0.0.0', port=5000)
+    #serve(app, host='0.0.0.0', port=5000, threads=4)

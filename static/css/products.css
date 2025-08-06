@@ -4,6 +4,38 @@
     padding: 0 2rem;
 }
 
+.product-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+    padding: 0 2rem;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--text-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--button-hover-shadow);
+}
+
+.filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
 .product-hero {
     background: var(--card-bg);
     border-radius: 12px;

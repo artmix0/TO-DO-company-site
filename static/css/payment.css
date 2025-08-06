@@ -162,10 +162,20 @@
 
 /* Payment Form Styles */
 .payment-form {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: var(--card-shadow);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+    grid-column: 1/3;
+}
+
+.payment-form.show {
+    max-height: 1000px;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .form-section {
@@ -231,7 +241,7 @@
     flex: 1;
 }
 
-.pay-button {
+.checkout-button, .pay-button {
     background: var(--primary-color);
     color: white;
     border: none;
@@ -244,15 +254,6 @@
     transition: background-color 0.3s;
 }
 
-.pay-button:hover {
+.checkout-button:hover, .pay-button:hover {
     background: var(--primary-hover-color);
-}
-
-/* Remove dark theme overrides since we're using CSS variables */
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .payment-grid {
-        grid-template-columns: 1fr;
-    }
 }

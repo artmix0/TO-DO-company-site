@@ -1,7 +1,7 @@
 // Load hero slides from JSON
 async function loadHeroSlides() {
     try {
-        const response = await fetch('http://localhost:5000/api/hero-slides', {
+        const response = await fetch('/api/hero-slides', {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
@@ -55,7 +55,7 @@ async function loadProducts() {
 
         // Load all products
         console.log('Fetching products from API...');
-        const productsResponse = await fetch('http://localhost:5000/api/products', {
+        const productsResponse = await fetch('/api/products', {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
@@ -67,7 +67,7 @@ async function loadProducts() {
         
         // Load selected product indexes
         console.log('Fetching main products configuration...');
-        const mainProductsResponse = await fetch('http://localhost:5000/api/main-products', {
+        const mainProductsResponse = await fetch('/api/main-products', {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
@@ -121,7 +121,7 @@ async function loadProducts() {
 // Load announcements from JSON
 async function loadAnnouncements() {
     try {
-        const response = await fetch('http://localhost:5000/api/announcements', {
+        const response = await fetch('/api/announcements', {
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
@@ -157,12 +157,6 @@ async function loadAnnouncements() {
     } catch (error) {
         console.error('Error loading announcements:', error);
     }
-}
-
-function initializeRippleEffects() {
-    document.querySelectorAll('.click-effect').forEach(button => {
-        button.addEventListener('click', createRipple);
-    });
 }
 
 // Initialize
@@ -229,11 +223,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         showSlide(currentSlideIndex);
     }
 
-    function currentSlide(index) {
-        currentSlideIndex = index - 1;
-        showSlide(currentSlideIndex);
-    }
-
     // Auto-advance hero slides
     setInterval(() => {
         changeSlide(1);
@@ -283,14 +272,4 @@ document.querySelectorAll('.product-card').forEach(card => {
     card.addEventListener('mouseleave', function () {
         this.style.transform = 'translateY(-5px) scale(1)';
     });
-});
-
-// Newsletter form submission
-document.querySelector('.newsletter-form')?.addEventListener('submit', function (e) {
-    e.preventDefault();
-    const email = this.querySelector('.newsletter-input').value;
-    if (email) {
-        alert('Thank you for subscribing! You\'ll receive your $10 off coupon soon.');
-        this.reset();
-    }
 });
