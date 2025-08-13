@@ -616,9 +616,11 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch("/api/email-settings")
         .then(res => res.json())
         .then(data => {
-            form.email.value = data.email || "";
-            form.password.value = data.password || "";
-            form.smtp_server.value = data.smtp_server || "";
+            const emailSettings = data.serwer_email || {};
+            form.email.value = emailSettings.email || "";
+            form.password.value = emailSettings.password || "";
+            form.smtp_server.value = emailSettings.smtp_server || "";
+            form.admin_email.value = emailSettings.admin_email || "";
         });
 
     form.addEventListener("submit", (e) => {
@@ -627,7 +629,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const settings = {
             email: form.email.value.trim(),
             password: form.password.value.trim(),
-            smtp_server: form.smtp_server.value.trim()
+            smtp_server: form.smtp_server.value.trim(),
+            admin_email: form.admin_email.value.trim()
         };
 
         fetch("/api/email-settings", {

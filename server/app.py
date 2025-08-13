@@ -13,6 +13,7 @@ from PIL import Image
 import io
 from datetime import datetime
 import random
+import threading
 
 app = Flask(__name__, static_folder='../static', template_folder='../templates')
 
@@ -188,7 +189,11 @@ def send_order():
     }
     SetFile(orders_list, 'orders')
 
-    #send_email(my_email, email, f"New order recived! NR {number}", ?????)
+    email_settings = json.loads(GetFile("my_email", '{"serwer_email": {"email": "", "password": "", "smtp_server": "", "admin_email": ""}}'))
+    my_email = email_settings.get("serwer_email", {})
+
+    #threading.Thread(target=send_email, args=(my_email, email, f"Order successfully placed! NR {number}", f"Your order has been received successfully. Order ID: {number}. We will process it as soon as possible.\n\nOrder Details:\n{json.dumps(order_details, indent=2)}\n\nThank you for your order!")).start()
+    #threading.Thread(target=send_email, args=(my_email, my_email['admin_email'], f"New order received! NR {number}", f"A new order has been placed.\n\nOrder ID: {number}\nCustomer Email: {email}\n\nOrder Details:\n{json.dumps(order_details, indent=2)}")).start()
 
     return jsonify({"message": "Order received successfully"}), 200
 
@@ -212,6 +217,19 @@ def change_order_state(order_id):
         return jsonify({"error": "Order not found"}), 404
 
     orders[order_id]['state'] = data['state']
+
+    order_states = {
+        0: "Waiting for payment",
+        1: "Order in realization",
+        2: "Order in delivery",
+        3: "Order delivered",
+    }
+
+    email_settings = json.loads(GetFile("my_email", '{"serwer_email": {"email": "", "password": "", "smtp_server": "", "admin_email": ""}}'))
+    my_email = email_settings.get("serwer_email", {})
+
+    #threading.Thread(target=send_email, args=(my_email, orders[order_id]['email'], f"Order state changed! Order ID: {order_id}", f"Your order state has been changed to: {order_states.get(data['state'], 'Unknown state')}")).start()
+
     SetFile(orders, "orders")
     return jsonify({"message": "Order state updated successfully"}), 200
 
@@ -226,7 +244,8 @@ def save_email_settings():
         "serwer_email": {
             "email": data['email'],
             "password": data['password'],
-            "smtp_server": data['smtp_server']
+            "smtp_server": data['smtp_server'],
+            "admin_email": data['admin_email']
         }
     }
     SetFile(email_settings, "my_email")
