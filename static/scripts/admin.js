@@ -152,42 +152,94 @@ async function loadOrders() {
         });
         const data = await response.json();
         const ordersList = document.querySelector('.orders-list');
+        ordersList.innerHTML = ''; // wyczyść poprzednią listę
 
-        for(order in data){
+        for (const orderId in data) {
+            const orderData = data[orderId];
+
             const newOrder = document.createElement('div');
             newOrder.className = 'order-item';
-            newOrder.dataset.id = order;
+            newOrder.dataset.id = orderId;
+
             const details_list = document.createElement('div');
-            details_list.innerHTML = `<h5>Order details:</h5>`;
             details_list.classList.add('order-details');
-            for (product of data[order].order_details){
-                details_list.innerHTML = details_list.innerHTML + 
-                `<div>Id: ${product['id']}</div><br>
-                <div>Name: ${product['name']}</div><br>
-                <div>Price: ${product['price']}</div><br>
-                <div>Quantity: ${product['quantity']}</div><br><br>`
+            details_list.innerHTML = `<h5>Order details:</h5>`;
+
+            for (const product of orderData.order_details) {
+                details_list.innerHTML += `
+                    <div>Id: ${product.id}</div>
+                    <div>Name: ${product.name}</div>
+                    <div>Price: ${product.price}</div>
+                    <div>Quantity: ${product.quantity}</div>
+                    <br>
+                `;
             }
+
             newOrder.innerHTML = `
-                <h4>Order #${order}</h4>
-                <p>Email: ${data[order].email}</p>
-                <p>Name: ${data[order].firstName} ${data[order].lastName}</p>
-                <p>Address: ${data[order].address}, ${data[order].city}, ${data[order].zip_code}</p>
-                <p>Status: <select class="order-state">
-                <option value="0">Waiting for payment</option>
-                <option value="1">Order in realization</option>
-                <option value="2">Order in delivery</option>
-                <option value="3">Order delivered</option>
-                </select></p>
+                <h4>Order #${orderId}</h4>
+                <p>Email: ${orderData.email}</p>
+                <p>Name: ${orderData.firstName} ${orderData.lastName}</p>
+                <p>Address: ${orderData.address}, ${orderData.city}, ${orderData.zip_code}</p>
+                <p>Status: 
+                    <select class="order-state">
+                        <option value="0">Waiting for payment</option>
+                        <option value="1">Order in realization</option>
+                        <option value="2">Order in delivery</option>
+                        <option value="3">Order delivered</option>
+                    </select>
+                    <button class="confirm-status-btn">Confirm</button>
+                </p>
             `;
-            newOrder.appendChild(details_list)
+
+            newOrder.appendChild(details_list);
             ordersList.appendChild(newOrder);
-            console.log(data[order].state);
-            document.querySelector('.order-state').selectedIndex = data[order].state;
+
+            // ustaw aktualny stan zamówienia
+            const stateSelect = newOrder.querySelector('.order-state');
+            stateSelect.value = orderData.state;
         }
     } catch (error) {
         console.error('Error loading orders:', error);
     }
 }
+
+// Funkcja do zapisu nowego statusu
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        const response = await fetch(`/api/orders_change/${orderId}`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ state: parseInt(newStatus) })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update order status');
+        }
+
+        const result = await response.json();
+        alert('Order status updated successfully!');
+        console.log('Order status updated:', result);
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        alert('Failed to update order status');
+    }
+}
+
+// Obsługa kliknięcia przycisku Confirm
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('confirm-status-btn')) {
+        const orderItem = e.target.closest('.order-item');
+        const orderId = orderItem.dataset.id;
+        const newStatus = orderItem.querySelector('.order-state').value;
+
+        if (confirm(`Are you sure you want to change the status of order #${orderId}?`)) {
+            updateOrderStatus(orderId, newStatus);
+        }
+    }
+});
 
 async function loadProducts() {
     try {
@@ -559,9 +611,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.querySelector('.order-state').addEventListener('change', ()=>{
+     const form = document.getElementById("email-settings-form");
 
-    })
+    fetch("/api/email-settings")
+        .then(res => res.json())
+        .then(data => {
+            form.email.value = data.email || "";
+            form.password.value = data.password || "";
+            form.smtp_server.value = data.smtp_server || "";
+        });
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const settings = {
+            email: form.email.value.trim(),
+            password: form.password.value.trim(),
+            smtp_server: form.smtp_server.value.trim()
+        };
+
+        fetch("/api/email-settings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(settings)
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+        });
+    });
 
     loadOrders();
 });

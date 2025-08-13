@@ -201,6 +201,45 @@ def get_orders():
         return jsonify({"error": "Failed to decode orders data"}), 500
     return jsonify(orders)
 
+@app.route('/api/orders_change/<order_id>', methods=['POST'])
+def change_order_state(order_id):
+    data = request.get_json()
+    if not data or 'state' not in data:
+        return jsonify({"error": "Invalid data"}), 400
+
+    orders = json.loads(GetFile("orders", "{}"))
+    if order_id not in orders:
+        return jsonify({"error": "Order not found"}), 404
+
+    orders[order_id]['state'] = data['state']
+    SetFile(orders, "orders")
+    return jsonify({"message": "Order state updated successfully"}), 200
+
+@app.route('/api/email-settings', methods=['POST'])
+def save_email_settings():
+    data = request.get_json()
+
+    if not data or 'email' not in data or 'password' not in data or 'smtp_server' not in data:
+        return jsonify({"error": "Invalid data"}), 400
+
+    email_settings = {
+        "serwer_email": {
+            "email": data['email'],
+            "password": data['password'],
+            "smtp_server": data['smtp_server']
+        }
+    }
+    SetFile(email_settings, "my_email")
+    return jsonify({"message": "Email settings saved successfully"}), 200
+
+
+@app.route('/api/email-settings', methods=['GET'])
+def get_email_settings():
+    try:
+        return json.loads(GetFile("my_email", '{"main_email": {"email": "", "password": "", "smtp_server": ""}}'))
+    except json.JSONDecodeError:
+        return jsonify({"error": "Failed to read email settings"}), 500
+
 def GetFile(File, NoFile):
     try:
         with open(f'{str(base_path)}\\data\\{File}.json', 'r') as f:
@@ -221,18 +260,18 @@ def SetFile(SetFile, File):
         f.write(json.dumps(SetFile))
 
 def send_email(serwer_email, reciepent, subject, body):
-    if serwer_email['email'] == "" or serwer_email['password'] == "":
+    if serwer_email['email'] == "" or serwer_email['password'] == "" or serwer_email.get('smtp_server', '') == "":
         print("Nie skonfigurowano adresu e-mail.")
         return
+
     msg = MIMEMultipart()
     msg['From'] = serwer_email["email"]
     msg['To'] = reciepent
     msg['Subject'] = subject
-
     msg.attach(MIMEText(body, 'plain'))
 
     try:
-        server = smtplib.SMTP('smtp.poczta.onet.pl', 587)
+        server = smtplib.SMTP(serwer_email["smtp_server"], 587)
         server.starttls()
         server.login(serwer_email["email"], serwer_email["password"])
         text = msg.as_string()
@@ -241,8 +280,6 @@ def send_email(serwer_email, reciepent, subject, body):
         print("E-mail wysłany pomyślnie")
     except Exception as e:
         print(f"Błąd podczas wysyłania e-maila: {e}")
-
-my_email = GetFile('my_email', '{"main_email": {"email": "", "password": ""}}')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
