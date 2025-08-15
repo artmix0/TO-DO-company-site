@@ -54,12 +54,8 @@ async function loadAnnouncements() {
             newAnnouncement.className = 'announcement-item';
             newAnnouncement.dataset.id = announcement.id;
             newAnnouncement.innerHTML = `
-                <div class="announcement-content">
-                    <input type="text" value="${announcement.text}" class="announcement-input">
-                </div>
-                <div class="announcement-actions">
-                    <button class="delete-btn">Delete</button>
-                </div>
+                <input type="text" value="${announcement.text}" class="announcement-input">
+                <button class="delete-btn">Delete</button>
             `;
             announcementList.appendChild(newAnnouncement);
         });
@@ -443,22 +439,21 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHeroSlides();
 
     // Add New Announcement
-    document.querySelector('.add-announcement-btn').addEventListener('click', () => {
+    document.querySelector('.announcement-content').addEventListener('submit', (e) => {
+        e.preventDefault();
         const announcementList = document.querySelector('.announcement-list');
+        const announcementInput = document.querySelector('.announcement-content .announcement-input');
         const newId = document.querySelectorAll('.announcement-item').length + 1;
         const newAnnouncement = document.createElement('div');
         newAnnouncement.className = 'announcement-item';
         newAnnouncement.dataset.id = newId;
         newAnnouncement.innerHTML = `
-            <div class="announcement-content">
-                <input type="text" placeholder="New Announcement" class="announcement-input">
-            </div>
-            <div class="announcement-actions">
-                <button class="delete-btn">Delete</button>
-            </div>
+            <input type="text" placeholder="New Announcement" class="announcement-input" value="${announcementInput.value}">
+            <button class="delete-btn">Delete</button>
         `;
         announcementList.appendChild(newAnnouncement);
         saveAnnouncements();
+        announcementInput.value = '';
     });
 
     // Add new product
@@ -543,29 +538,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Add New Hero Slide
-    document.querySelector('.add-slide-btn').addEventListener('click', () => {
+    document.querySelector('.hero-slide-content').addEventListener('submit', (e) => {
+        e.preventDefault();
         const heroSlides = document.querySelector('.hero-slides');
         const newId = document.querySelectorAll('.hero-slide').length + 1;
         const newSlide = document.createElement('div');
+        const title = document.querySelector('.hero-slide-content .slide-title-input');
+        const description = document.querySelector('.hero-slide-content .slide-description-input');
+        const buttonText = document.querySelector('.hero-slide-content .slide-button-text-input');
+        const buttonLink = document.querySelector('.hero-slide-content .slide-button-link-input');
         newSlide.className = 'hero-slide';
         newSlide.dataset.id = newId;
         newSlide.innerHTML = `
             <h3>Slide ${newId}</h3>
             <div class="form-group">
                 <label>Title</label>
-                <input type="text" placeholder="Slide Title" class="slide-title-input">
+                <input type="text" placeholder="Slide Title" class="slide-title-input" value="${title.value}">
             </div>
             <div class="form-group">
                 <label>Description</label>
-                <textarea placeholder="Slide Description" class="slide-description-input"></textarea>
+                <textarea placeholder="Slide Description" class="slide-description-input" value="${description.value}"></textarea>
             </div>
             <div class="form-group">
                 <label>Button Text</label>
-                <input type="text" placeholder="Button Text" class="slide-button-text-input">
+                <input type="text" placeholder="Button Text" class="slide-button-text-input" value="${buttonText.value}">
             </div>
             <div class="form-group">
                 <label>Button Link</label>
-                <input type="text" placeholder="#" class="slide-button-link-input">
+                <input type="text" placeholder="#" class="slide-button-link-input" value="${buttonLink.value}">
             </div>
             <div class="slide-actions">
                 <button class="delete-btn">Delete</button>
@@ -573,6 +573,10 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         heroSlides.appendChild(newSlide);
         saveHeroSlides();
+        title.value = '';
+        description.value = '';
+        buttonText.value = '';
+        buttonLink.value = '';
     });
 
     // Handle input changes

@@ -10,46 +10,43 @@
 </head>
 <body>
     <main class="admin-dashboard">
-        <div class="container">
-            <div class="dashboard-grid">
-                <section class="admin-section">
+        <table class="container">
+            <tr>
+                <td>
                     <h2>News Slider Management</h2>
                     <div class="announcement-list">
                     </div>
-                    <button class="add-announcement-btn">Add New Announcement</button>
-                </section>
+                </td>
 
-                <section class="admin-section">
+                <td>
                     <h2>Hero Slider Management</h2>
                     <div class="hero-slides">
                     </div>
-                    <button class="add-slide-btn">Add New Slide</button>
-                </section>
+                </td>
 
-                <section class="admin-section full-width">
+                <td>
                     <h2>All Products Management</h2>
                     <p>Add and manage all available products</p>
                     <div class="product-list">
                     </div>
-                    <button class="add-product-btn">Add New Product</button>
-                </section>
+                </td>
 
-                <section class="admin-section full-width">
+                <td>
                     <h2>Featured Products Management</h2>
                     <p>Select up to 6 products to display on the main page</p>
                     <div class="featured-products-list">
                     </div>
-                </section>
+                </td>
 
-                <section class="admin-section full-width">
+                <td>
                     <h2>Orders Management</h2>
                     <p>View and manage all customer orders</p>
                     <div class="orders-list">
                         
                     </div>
-                </section>
+                </td>
 
-                <section class="admin-section full-width">
+                <td>
                     <h2>Email Settings</h2>
                     <p>Configure your email for sending notifications</p>
 
@@ -68,9 +65,66 @@
                         </label>
                         <button type="submit">Save Settings</button>
                     </form>
-                </section>
-            </div>
-        </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <form class="announcement-content">
+                        <input type="text" placeholder="New Announcement" class="announcement-input" required>
+                        <button class="add-announcement-btn" type="submit">Add New Announcement</button>
+                    </form>
+                </td>
+                <td>
+                    <form class="hero-slide-content">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" placeholder="Slide Title" class="slide-title-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea placeholder="Slide Description" class="slide-description-input" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Button Text</label>
+                            <input type="text" placeholder="Button Text" class="slide-button-text-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Button Link</label>
+                            <input type="text" placeholder="#" class="slide-button-link-input" required>
+                        </div>
+                        <button type="submit" class="add-slide-btn">Add New Slide</button>
+                    </form>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label>Product Image</label>
+                        <input type="file" accept="image/*" class="product-image-input">
+                        <div class="image-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" class="product-name-input" placeholder="Product Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="product-description-input" placeholder="Product Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Filters</label>
+                        <textarea class="product-filters-input" placeholder="Product Filters"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="text" class="product-price-input" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Sale Badge (optional)</label>
+                        <input type="text" class="sale-badge-input" placeholder="e.g., 20% OFF">
+                    </div>
+                    <button class="add-product-btn">Add New Product</button>
+                </td>
+            </tr>
+        </table>
     </main>
 
     <script src="../static/scripts/admin.js"></script>
